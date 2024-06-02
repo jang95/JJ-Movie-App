@@ -26,12 +26,9 @@ const Slider = ({ type, title }: SliderProps) => {
   }
 
   useEffect(() => {
-    // 브라우저 창 크기에 비례해 보여줄 이미지 수
     const handleResize = () => {
       if (slideRef.current) {
-        // 해당 DOM요소의 너비
         const sliderWidth = slideRef.current.offsetWidth;
-        // 너비를 이미지 사이즈로 나눔
         const itemsPerSlide = Math.floor(sliderWidth / IMAGE_SIZE);
         setImagesPerPage(itemsPerSlide);
       }
@@ -39,7 +36,6 @@ const Slider = ({ type, title }: SliderProps) => {
 
     handleResize();
 
-    // 브라우저 창 크기가 조절될 때 호출
     window.addEventListener('resize', handleResize);
 
     return () => window.removeEventListener('resize', handleResize);
@@ -58,7 +54,7 @@ const Slider = ({ type, title }: SliderProps) => {
   };
 
   const showImages = () => {
-    if (!data) return null;
+    if (!data) return <div>영화 정보를 가져오는데 실패</div>;
 
     // 슬라이드 마지막 index
     const lastSlideIndex = Math.ceil(data.results.length / imagesPerPage) - 1;
@@ -68,15 +64,22 @@ const Slider = ({ type, title }: SliderProps) => {
     const emptySlots = imagesPerPage - lastSlideImages.length;
 
     const imagesToDisplay = data.results.map((image) => (
-      <img
+      <div
         key={image.id}
-        src={`${BASE_IMAGE_URL}w${IMAGE_SIZE}${image.poster_path}`}
-        alt={`Image ${image.title}`}
-        className='transition-transform duration-500'
-      />
+        className={`group w-[200px] h-[300px] hover:w-[400px] hover:h-[600px] hover:relative transition-all duration-500`}
+      >
+        <img
+          className='object-fill w-full h-full hover:h-3/4'
+          src={`${BASE_IMAGE_URL}w${IMAGE_SIZE}${image.poster_path}`}
+          alt={`Image ${image.title}`}
+        />
+        <div className='p-4 bg-gray-400 hidden group-hover:block'>
+          <h3 className='font-bold text-lg'>{image.title}</h3>
+          <p className='text-sm line-clamp-3'>{image.overview}</p>
+        </div>
+      </div>
     ));
 
-    // 마지막 슬라이드일 때 빈 이미지 슬롯 추가
     if (startIndex + imagesPerPage > data.results.length) {
       for (let i = 0; i < emptySlots; i++) {
         imagesToDisplay.push(
@@ -93,7 +96,9 @@ const Slider = ({ type, title }: SliderProps) => {
       <div className='font-bold text-3xl p-4'>{title}</div>
       <div className='flex items-center'>
         {startIndex === 0 ? null : (
-          <MdArrowBackIos onClick={showPreviousImages} size={40} />
+          <div className='h-full'>
+            <MdArrowBackIos onClick={showPreviousImages} size={40} />
+          </div>
         )}
         <div ref={slideRef} className='flex overflow-hidden w-full'>
           <div
