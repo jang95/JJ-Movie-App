@@ -1,5 +1,9 @@
 import axios from 'axios';
-import { MoiveListResponse, MovieDetail } from '../types/response';
+import {
+  MoiveListResponse,
+  MovieAgeRating,
+  MovieDetail,
+} from '../types/response';
 
 const API_KEY: string = import.meta.env.VITE_TMDB_API_KEY;
 const MOVIE_BASE_URL = 'https://api.themoviedb.org/3/movie/';
@@ -89,7 +93,7 @@ export const fetchMovieDetail = async (
 // 오류: TanStack-Query의 경우 Promise를 반환해야 함
 export const fetchMovieReleaseDates = async (
   movieID: string | undefined
-): Promise<string> => {
+): Promise<MovieAgeRating> => {
   try {
     const response = await axios.get(
       `${MOVIE_BASE_URL}${movieID}/release_dates`,
@@ -99,16 +103,6 @@ export const fetchMovieReleaseDates = async (
         },
       }
     );
-
-    // const check = response.data.results.filter(
-    //   (item: { iso_3166_1: string }) => item.iso_3166_1 === 'KR'
-    // );
-
-    // if (check[0].release_dates) {
-    //   return check[0].release_dates.certification;
-    // } else {
-    //   return 'API 응답에서 한국 연령 정보를 찾을 수 없습니다.';
-    // }
 
     return response.data;
   } catch (error) {

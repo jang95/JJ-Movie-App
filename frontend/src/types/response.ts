@@ -54,3 +54,19 @@ export interface MovieDetail {
   vote_average: number;
   vote_count: number;
 }
+
+// Movie release date & age-rating
+export interface MovieAgeRating {
+  id: number;
+  results: Array<{
+    iso_3166_1: string;
+    release_dates: Array<{
+      certification: string;
+      descriptors: string[];
+      iso_639_1: string;
+      note: string;
+      release_date: string;
+      type: number;
+    }>;
+  }>;
+}

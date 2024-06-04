@@ -28,6 +28,7 @@ const Slider = ({ type, title }: SliderProps) => {
   }
 
   useEffect(() => {
+    // 브라우저 화면 크기에 따른 슬라이드 이미지 수
     const handleResize = () => {
       if (slideRef.current) {
         const sliderWidth = slideRef.current.offsetWidth;
@@ -39,6 +40,12 @@ const Slider = ({ type, title }: SliderProps) => {
     handleResize();
 
     window.addEventListener('resize', handleResize);
+
+    /**
+     * 고쳐야 할 부분
+     * 슬라이드 컴포넌트 안에서 리사이즈 함수를 불러오면, 슬라이드 컴포넌트 수마다 이걸 실행;;
+     * 상위 컴포넌트로 옮겨서 한 번만 실행되게 하고, 브라우저 창 크기의 인식을 계속해서 확인...하게 한다?
+     */
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -106,7 +113,9 @@ const Slider = ({ type, title }: SliderProps) => {
         <div ref={slideRef} className='flex overflow-hidden w-full'>
           <div
             className='flex transition-transform duration-500 gap-2'
-            style={{ transform: `translateX(-${startIndex * IMAGE_SIZE}px)` }}
+            style={{
+              transform: `translateX(-${startIndex * IMAGE_SIZE}px)`,
+            }}
           >
             {showImages()}
           </div>
