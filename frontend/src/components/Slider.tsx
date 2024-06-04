@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchMoviesList } from '../api/moviesApi';
 import { MdArrowForwardIos, MdArrowBackIos } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
 const IMAGE_SIZE = 200;
@@ -15,6 +16,7 @@ const Slider = ({ type, title }: SliderProps) => {
   const slideRef = useRef<HTMLDivElement | null>(null);
   const [startIndex, setStartIndex] = useState(0);
   const [imagesPerPage, setImagesPerPage] = useState(6);
+  const navigate = useNavigate();
 
   const { data, isFetching } = useQuery({
     queryKey: [type],
@@ -67,6 +69,7 @@ const Slider = ({ type, title }: SliderProps) => {
       <div
         key={image.id}
         className={`group w-[200px] h-[300px] hover:w-[400px] hover:h-[600px] hover:relative transition-all duration-500`}
+        onClick={() => navigate(`/movie/${image.id}`)}
       >
         <img
           className='object-fill w-full h-full hover:h-3/4'

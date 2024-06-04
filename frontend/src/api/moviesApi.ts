@@ -2,6 +2,7 @@ import axios from 'axios';
 import { MoiveListResponse, MovieDetail } from '../types/response';
 
 const API_KEY: string = import.meta.env.VITE_TMDB_API_KEY;
+const MOVIE_BASE_URL = 'https://api.themoviedb.org/3/movie/';
 
 // 공통 params 객체 생성
 const commonParams = {
@@ -15,15 +16,12 @@ export const fetchMoviesList = async (
   type: string
 ): Promise<MoiveListResponse> => {
   try {
-    const response = await axios.get(
-      `https://api.themoviedb.org/3/movie/${type}`,
-      {
-        params: {
-          ...commonParams,
-          page: 1,
-        },
-      }
-    );
+    const response = await axios.get(`${MOVIE_BASE_URL}${type}`, {
+      params: {
+        ...commonParams,
+        page: 1,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error('영화 목록을 가져오는데 실패했습니다.');
@@ -73,17 +71,44 @@ export const fetchMovieSearch = async (
 };
 
 export const fetchMovieDetail = async (
-  movieID: number
+  movieID: string | undefined
 ): Promise<MovieDetail> => {
   try {
+    const response = await axios.get(`${MOVIE_BASE_URL}${movieID}`, {
+      params: {
+        ...commonParams,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error('해당 영화 정보를 가져오는데 실패했습니다.');
+  }
+};
+
+// 오류: TanStack-Query의 경우 Promise를 반환해야 함
+export const fetchMovieReleaseDates = async (
+  movieID: string | undefined
+): Promise<string> => {
+  try {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/movie/${movieID}`,
+      `${MOVIE_BASE_URL}${movieID}/release_dates`,
       {
         params: {
-          ...commonParams,
+          api_key: API_KEY,
         },
       }
     );
+
+    // const check = response.data.results.filter(
+    //   (item: { iso_3166_1: string }) => item.iso_3166_1 === 'KR'
+    // );
+
+    // if (check[0].release_dates) {
+    //   return check[0].release_dates.certification;
+    // } else {
+    //   return 'API 응답에서 한국 연령 정보를 찾을 수 없습니다.';
+    // }
 
     return response.data;
   } catch (error) {
