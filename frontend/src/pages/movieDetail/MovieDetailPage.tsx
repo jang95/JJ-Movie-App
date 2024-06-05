@@ -3,6 +3,7 @@ import { fetchMovieDetail, fetchMovieReleaseDates } from '../../api/moviesApi';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { getAgeRatingClass, getPreferenceColor } from '../../util/rating';
+import CreditsList from '../../components/CreditsList';
 
 const BACKGROUND_IMAGE_URL = 'https://media.themoviedb.org/t/p/w1280/';
 
@@ -84,13 +85,17 @@ const MovieDetailPage = () => {
   ) : null;
 
   return (
-    <div className='relative'>
-      <div
-        style={backgroundImageStyle}
-        className='absolute top-0 left-0 w-full h-full bg-cover bg-center opacity-30'
-      />
-      {content}
-    </div>
+    <>
+      <div className='relative'>
+        <div
+          style={backgroundImageStyle}
+          className='absolute top-0 left-0 w-full h-full bg-cover bg-center opacity-30'
+        />
+        {content}
+      </div>
+
+      <CreditsList />
+    </>
   );
 };
 

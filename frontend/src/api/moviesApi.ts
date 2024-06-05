@@ -106,6 +106,24 @@ export const fetchMovieReleaseDates = async (
 
     return response.data;
   } catch (error) {
-    throw new Error('해당 영화 정보를 가져오는데 실패했습니다.');
+    throw new Error('해당 영화의 시청 연령 등급을 가져오는데 실패했습니다.');
+  }
+};
+
+// 영화 출연진 및 제작진
+export const fetchMovieCredits = async (movieID: string | undefined) => {
+  try {
+    const response = await axios.get(`${MOVIE_BASE_URL}${movieID}/credits`, {
+      params: {
+        api_key: API_KEY,
+        language: 'ko-KR',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      '해당 영화의 출연진 및 제작진의 정보를 가져오는데 실패했습니다.'
+    );
   }
 };
