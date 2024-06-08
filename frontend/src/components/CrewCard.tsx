@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { ActorDetail, CrewDetail } from '../store/crew';
 
 const FACE_URL = 'https://media.themoviedb.org/t/p/w276_and_h350_face/';
@@ -9,6 +10,7 @@ interface CrewCardProps {
 }
 
 const CrewCard = ({ crewList }: CrewCardProps) => {
+  const navigate = useNavigate();
   const mainCrew = crewList.slice(0, 6);
 
   return (
@@ -18,6 +20,7 @@ const CrewCard = ({ crewList }: CrewCardProps) => {
           <div
             key={crew.credit_id}
             className='max-w-[200px] shadow-lg bg-white mt-4 rounded-md mb-4'
+            onClick={() => navigate(`/person/${crew.id}`)}
           >
             <img
               className='w-full rounded-t-md'
