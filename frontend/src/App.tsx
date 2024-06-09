@@ -3,6 +3,7 @@ import HomePage from './pages/home/HomePage';
 import Root from './pages/Root';
 import MovieDetailPage from './pages/movieDetail/MovieDetailPage';
 import PersonDetailPage from './pages/personDetail/PersonDetailPage';
+import SearchPage from './pages/search/SearchPage';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: '/person/:id',
         element: <PersonDetailPage />,
+      },
+      {
+        path: '/search',
+        element: <SearchPage />,
       },
     ],
   },
