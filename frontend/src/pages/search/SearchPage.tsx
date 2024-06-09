@@ -16,39 +16,41 @@ const SearchPage = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error occurred: {error.message}</div>;
 
+  let content;
+
   if (data) {
-    console.log('data', data);
-    return (
-      <>
-        {data?.results.length > 0 ? (
-          <div className='p-4'>
-            {data.results.map((movie) => (
-              <div
-                key={movie.id}
-                className='flex gap-4 border-2 rounded-md m-2 border-gray-500'
-                onClick={() => navigate(`/movie/${movie.id}`)}
-              >
-                <img
-                  className=''
-                  src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-                  alt={movie.title}
-                />
-                <div className='flex flex-col gap-2'>
-                  {`${movie.title} (원제: ${movie.original_title})`}
-                  <span>{`개봉일 ${movie.release_date}`}</span>
-                  <p>{movie.overview}</p>
-                </div>
-              </div>
-            ))}
+    if (data?.results.length > 0) {
+      content = data.results.map((movie) => (
+        <div
+          key={movie.id}
+          className='flex flex-col min-w-[300px] md:flex-row gap-4 shadow rounded-md m-2 border-gray-500'
+          onClick={() => navigate(`/movie/${movie.id}`)}
+        >
+          <div className='min-w-[200px] max-w-[200px] mx-auto md:mx-0'>
+            <img
+              className='w-[200px] h-[300px] rounded-md object-cover'
+              src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+              alt={movie.title}
+            />
           </div>
-        ) : (
-          <p>No results found.</p>
-        )}
-      </>
-    );
+
+          <div className='flex flex-col w-full md:w-[90%] gap-2 p-4'>
+            <span className='text-xl md:text-2xl'>
+              {`${movie.title} (원제: ${movie.original_title})`}
+            </span>
+            <span>{`개봉일 ${movie.release_date}`}</span>
+            <div className='h-[150px] overflow-y-scroll md:h-auto md:overflow-y-hidden'>
+              {movie.overview}
+            </div>
+          </div>
+        </div>
+      ));
+    } else {
+      content = <p>No results found.</p>;
+    }
   }
 
-  return <div></div>;
+  return <div className='p-4'>{content}</div>;
 };
 
 export default SearchPage;
