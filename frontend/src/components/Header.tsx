@@ -3,7 +3,7 @@ import SearchBar from './SearchBar';
 
 const Header = () => {
   return (
-    <header className='shadow sticky top-0 z-10 bg-yellow-100'>
+    <header className='shadow sticky top-0 z-20 bg-yellow-100'>
       <div className='container flex justify-between mx-auto p-6 items-center'>
         <div className='flex items-center'>
           <a href='/' className='text-2xl font-bold text-gray-800'>

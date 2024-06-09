@@ -26,6 +26,8 @@ const MovieDetailPage = () => {
       const check = age.results.filter((item) => item.iso_3166_1 === 'KR');
       if (check.length === 0) {
         setAgeRating('NR');
+      } else if (check[0].release_dates[0].certification === '') {
+        setAgeRating('R');
       } else {
         setAgeRating(check[0].release_dates[0].certification);
       }
@@ -43,19 +45,19 @@ const MovieDetailPage = () => {
 
   const content = data ? (
     <div className='flex flex-col sm:flex-row justify-center items-center p-8 sm:p-12'>
-      <div className='w-[200px] h-[300px] sm:w-[300px] sm:h-[450px]'>
+      <div className='min-w-[300px] z-10'>
         <img
           src={`https://media.themoviedb.org/t/p/w342/${data?.poster_path}`}
           alt={data?.title}
-          className='w-[200px] h-[300px] sm:w-[300px] sm:h-[450px] object-cover'
+          className=''
         />
       </div>
       <div className='flex flex-col w-full sm:w-[700px] sm:pl-8 gap-4 mt-4 sm:mt-0'>
         <span className='text-2xl sm:text-3xl font-bold mb-2'>
           {data?.title}
-          <sup className={`ml-2 p-1 rounded ${getAgeRatingClass(ageRating)}`}>
+          <sub className={`ml-2 p-1 rounded ${getAgeRatingClass(ageRating)}`}>
             {ageRating}
-          </sup>
+          </sub>
         </span>
 
         <div className='flex flex-col gap-2 text-sm sm:text-base font-semibold'>
