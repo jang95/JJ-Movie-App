@@ -23,12 +23,8 @@ const PersonDetailPage = () => {
 
   return (
     <div className='flex flex-col lg:flex-row justify-center items-center lg:items-start py-12 px-8 gap-6'>
-      <div>
-        <SideProfile />
-      </div>
-      <div>
-        <MainProfile />
-      </div>
+      <SideProfile />
+      <MainProfile />
     </div>
   );
 };

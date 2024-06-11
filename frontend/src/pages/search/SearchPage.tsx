@@ -26,7 +26,7 @@ const SearchPage = () => {
           className='flex flex-col min-w-[300px] md:flex-row gap-4 shadow rounded-md m-2 border-gray-500'
           onClick={() => navigate(`/movie/${movie.id}`)}
         >
-          <div className='min-w-[200px] max-w-[200px] mx-auto md:mx-0'>
+          <div className='flex items-center min-w-[200px] max-w-[200px] mx-auto md:mx-0'>
             <img
               className='w-[200px] h-[300px] rounded-md object-cover'
               src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
@@ -34,11 +34,11 @@ const SearchPage = () => {
             />
           </div>
 
-          <div className='flex flex-col w-full md:w-[90%] gap-2 p-4'>
+          <div className='flex flex-col w-full md:w-[90%] gap-4 p-4'>
             <span className='text-xl md:text-2xl'>
               {`${movie.title} (원제: ${movie.original_title})`}
             </span>
-            <span>{`개봉일 ${movie.release_date}`}</span>
+            <span className='text-lg'>{`개봉일 ${movie.release_date}`}</span>
             <div className='h-[150px] overflow-y-scroll md:h-auto md:overflow-y-hidden'>
               {movie.overview}
             </div>
