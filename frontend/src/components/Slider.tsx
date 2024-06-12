@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchMoviesList } from '../api/moviesApi';
 import { MdArrowForwardIos, MdArrowBackIos } from 'react-icons/md';
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
 const IMAGE_SIZE = 200;
+const INDEX_COUNT = 5;
 
 interface SliderProps {
   type: string;
@@ -13,116 +14,76 @@ interface SliderProps {
 }
 
 const Slider = ({ type, title }: SliderProps) => {
-  const slideRef = useRef<HTMLDivElement | null>(null);
-  const [startIndex, setStartIndex] = useState(0);
-  const [imagesPerPage, setImagesPerPage] = useState(6);
   const navigate = useNavigate();
 
-  const { data, isFetching } = useQuery({
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [lastIndex, setLastIndex] = useState(INDEX_COUNT);
+
+  const { data, isLoading } = useQuery({
     queryKey: [type],
     queryFn: () => fetchMoviesList(type),
   });
 
-  if (isFetching) {
-    console.log('이미지 리스트 가져오는 중');
+  if (isLoading) {
+    return <div>각 테마에 맞는 영화 불러오는 중...</div>;
   }
 
-  useEffect(() => {
-    // 브라우저 화면 크기에 따른 슬라이드 이미지 수
-    const handleResize = () => {
-      if (slideRef.current) {
-        const sliderWidth = slideRef.current.offsetWidth;
-        const itemsPerSlide = Math.floor(sliderWidth / IMAGE_SIZE);
-        setImagesPerPage(itemsPerSlide);
-      }
-    };
+  let content;
 
-    handleResize();
+  if (data) {
+    const viewList = data.results.slice(slideIndex, lastIndex);
 
-    window.addEventListener('resize', handleResize);
-
-    /**
-     * 고쳐야 할 부분
-     * 슬라이드 컴포넌트 안에서 리사이즈 함수를 불러오면, 슬라이드 컴포넌트 수마다 이걸 실행;;
-     * 상위 컴포넌트로 옮겨서 한 번만 실행되게 하고, 브라우저 창 크기의 인식을 계속해서 확인...하게 한다?
-     */
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const showNextImages = () => {
-    if (data && startIndex + imagesPerPage < data.results.length) {
-      setStartIndex(startIndex + imagesPerPage);
-    }
-  };
-
-  const showPreviousImages = () => {
-    if (startIndex - imagesPerPage >= 0) {
-      setStartIndex(startIndex - imagesPerPage);
-    }
-  };
-
-  const showImages = () => {
-    if (!data) return <div>영화 정보를 가져오는데 실패</div>;
-
-    // 슬라이드 마지막 index
-    const lastSlideIndex = Math.ceil(data.results.length / imagesPerPage) - 1;
-    // 마지막 슬라이드에 있는 이미지 수
-    const lastSlideImages = data.results.slice(lastSlideIndex * imagesPerPage);
-    // 부족한 이미지 채울 더미 수
-    const emptySlots = imagesPerPage - lastSlideImages.length;
-
-    const imagesToDisplay = data.results.map((image) => (
+    content = viewList.map((image) => (
       <div
         key={image.id}
-        className={`group w-[200px] h-[300px] hover:w-[400px] hover:h-[600px] hover:relative transition-all duration-500`}
+        className={`gap-4 hover:cursor-pointer`}
         onClick={() => navigate(`/movie/${image.id}`)}
       >
         <img
-          className='object-fill w-full h-full hover:h-3/4'
           src={`${BASE_IMAGE_URL}w${IMAGE_SIZE}${image.poster_path}`}
           alt={`Image ${image.title}`}
         />
-        <div className='p-4 bg-gray-400 hidden group-hover:block'>
-          <h3 className='font-bold text-lg'>{image.title}</h3>
-          <p className='text-sm line-clamp-3'>{image.overview}</p>
-        </div>
       </div>
     ));
+  }
 
-    if (startIndex + imagesPerPage > data.results.length) {
-      for (let i = 0; i < emptySlots; i++) {
-        imagesToDisplay.push(
-          <div className='w-[200px] h-[300px]' key={`dummy-${i}`} />
-        );
-      }
+  const handleNext = () => {
+    if (slideIndex < 15) {
+      setSlideIndex((prev) => prev + INDEX_COUNT);
+      setLastIndex((prev) => prev + INDEX_COUNT);
+    } else if (slideIndex === 15) {
+      setSlideIndex(0);
+      setLastIndex(INDEX_COUNT);
     }
+  };
 
-    return imagesToDisplay;
+  const handlePrev = () => {
+    if (slideIndex > 0) {
+      setSlideIndex((prev) => prev - INDEX_COUNT);
+      setLastIndex((prev) => prev - INDEX_COUNT);
+    } else if (slideIndex === 0) {
+      setSlideIndex(15);
+      setLastIndex(20);
+    }
   };
 
   return (
     <div className='container mx-auto my-8'>
-      <div className='font-bold text-3xl p-4'>{title}</div>
-      <div className='flex items-center'>
-        {startIndex === 0 ? null : (
-          <div className='h-full'>
-            <MdArrowBackIos onClick={showPreviousImages} size={40} />
-          </div>
-        )}
-        <div ref={slideRef} className='flex overflow-hidden w-full'>
-          <div
-            className='flex transition-transform duration-500 gap-2'
-            style={{
-              transform: `translateX(-${startIndex * IMAGE_SIZE}px)`,
-            }}
-          >
-            {showImages()}
-          </div>
+      <div className='font-bold text-xl sm:text-3xl p-4'>{title}</div>
+      <div className='flex'>
+        <div className='flex gap-1 sm:gap-4 justify-center items-center p-4 w-full'>
+          <MdArrowBackIos
+            className='cursor-pointer'
+            size={60}
+            onClick={handlePrev}
+          />
+          {content}
+          <MdArrowForwardIos
+            className='cursor-pointer'
+            size={60}
+            onClick={handleNext}
+          />
         </div>
-        {data && startIndex + imagesPerPage >= data.results.length ? null : (
-          <MdArrowForwardIos onClick={showNextImages} size={40} />
-        )}
       </div>
     </div>
   );
