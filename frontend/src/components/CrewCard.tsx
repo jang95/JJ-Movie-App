@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { ActorDetail, CrewDetail } from '../store/crew';
 
 const FACE_URL = 'https://media.themoviedb.org/t/p/w276_and_h350_face/';
@@ -11,7 +12,25 @@ interface CrewCardProps {
 
 const CrewCard = ({ crewList }: CrewCardProps) => {
   const navigate = useNavigate();
-  const mainCrew = crewList.slice(0, 6);
+  const [mainCrew, setMainCrew] = useState<(ActorDetail | CrewDetail)[]>([]);
+
+  useEffect(() => {
+    const uniqueData = [];
+    const seen = new Set();
+
+    // 사람은 같은데 직업이 여러 개인 경우, 중복 제거
+    for (const item of crewList) {
+      const key = `${item.name}-${item.profile_path}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        uniqueData.push(item);
+      }
+
+      if (uniqueData.length === 6) break;
+    }
+
+    setMainCrew(uniqueData);
+  }, [crewList]);
 
   return (
     <>

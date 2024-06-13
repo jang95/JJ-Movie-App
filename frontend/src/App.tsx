@@ -1,9 +1,16 @@
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import HomePage from './pages/home/HomePage';
-import Root from './pages/Root';
-import MovieDetailPage from './pages/movieDetail/MovieDetailPage';
-import PersonDetailPage from './pages/personDetail/PersonDetailPage';
-import SearchPage from './pages/search/SearchPage';
+
+// Lazy Loading 페이지 컴포넌트
+const HomePage = lazy(() => import('./pages/home/HomePage'));
+const Root = lazy(() => import('./pages/Root'));
+const MovieDetailPage = lazy(
+  () => import('./pages/movieDetail/MovieDetailPage')
+);
+const PersonDetailPage = lazy(
+  () => import('./pages/personDetail/PersonDetailPage')
+);
+const SearchPage = lazy(() => import('./pages/search/SearchPage'));
 
 const router = createBrowserRouter([
   {
@@ -31,7 +38,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
 }
 
 export default App;
