@@ -11,7 +11,7 @@ const Header = () => {
           <Link to='/' className='text-2xl font-bold text-gray-800'>
             <picture>
               <source srcSet={webpLogo} type='image/webp' className='w-32' />
-              <img src={logo} alt='movie engine logo' className='w-32' />
+              <img src={logo} alt='movie engine logo' width='100' height='40' />
             </picture>
           </Link>
         </div>

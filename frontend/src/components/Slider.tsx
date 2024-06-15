@@ -35,17 +35,16 @@ const Slider = ({ type, title }: SliderProps) => {
         >
           <img
             src={`${BASE_IMAGE_URL}w${IMAGE_SIZE}${image.poster_path}`}
+            srcSet={`${BASE_IMAGE_URL}w${IMAGE_SIZE}${image.poster_path}`}
             alt={`Image ${image.title}`}
             loading='lazy'
+            width={IMAGE_SIZE}
+            height={IMAGE_SIZE * 1.5}
           />
         </div>
       ));
     }
-    return (
-      <div>
-        영화 정보를 가져오는데 실패 했습니다. 잠시 후 다시 시도해주세요.
-      </div>
-    );
+    return null;
   }, [data, indexRange, navigate]);
 
   const handleNext = () => {
@@ -70,10 +69,6 @@ const Slider = ({ type, title }: SliderProps) => {
     });
   };
 
-  if (isLoading) {
-    return <div>각 테마에 맞는 영화 불러오는 중...</div>;
-  }
-
   if (isError) {
     return (
       <div>
@@ -83,23 +78,29 @@ const Slider = ({ type, title }: SliderProps) => {
   }
 
   return (
-    <div className='container mx-auto my-8'>
-      <div className='font-bold text-xl sm:text-3xl p-4'>{title}</div>
-      <div className='flex'>
-        <div className='flex gap-1 sm:gap-4 justify-center items-center p-4 w-full'>
-          <MdArrowBackIos
-            className='cursor-pointer'
-            size={60}
-            onClick={handlePrev}
-          />
-          {content}
-          <MdArrowForwardIos
-            className='cursor-pointer'
-            size={60}
-            onClick={handleNext}
-          />
+    <div className='flex gap-1 sm:gap-4 justify-center items-center p-4 w-full min-w-[400px]'>
+      {isLoading ? (
+        <div>각 테마에 맞는 영화 불러오는 중...</div> // 로딩 플레이스홀더
+      ) : (
+        <div className='container mx-auto my-8'>
+          <div className='font-bold text-xl sm:text-3xl p-4'>{title}</div>
+          <div className='flex'>
+            <div className='flex gap-1 sm:gap-4 justify-center items-center p-4 w-full min-w-[400px]'>
+              <MdArrowBackIos
+                className='cursor-pointer'
+                size={60}
+                onClick={handlePrev}
+              />
+              {content}
+              <MdArrowForwardIos
+                className='cursor-pointer'
+                size={60}
+                onClick={handleNext}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
