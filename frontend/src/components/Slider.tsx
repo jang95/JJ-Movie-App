@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchMoviesList } from '../api/moviesApi';
 import { MdArrowForwardIos, MdArrowBackIos } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
+import { SlideSkeleton } from '../ui/Skeletons';
 
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
 const IMAGE_SIZE = 200;
@@ -30,7 +31,7 @@ const Slider = ({ type, title }: SliderProps) => {
       return viewList.map((image) => (
         <div
           key={image.id}
-          className={`gap-4 hover:cursor-pointer`}
+          className={`hover:cursor-pointer w-[100px] h-[150px] lg:w-[200px] lg:h-[300px] flex-shrink-0`}
           onClick={() => navigate(`/movie/${image.id}`)}
         >
           <img
@@ -38,8 +39,7 @@ const Slider = ({ type, title }: SliderProps) => {
             srcSet={`${BASE_IMAGE_URL}w${IMAGE_SIZE}${image.poster_path}`}
             alt={`Image ${image.title}`}
             loading='lazy'
-            width={IMAGE_SIZE}
-            height={IMAGE_SIZE * 1.5}
+            className='w-full h-full object-cover rounded-md'
           />
         </div>
       ));
@@ -78,30 +78,30 @@ const Slider = ({ type, title }: SliderProps) => {
   }
 
   return (
-    <div className='flex gap-1 sm:gap-4 justify-center items-center p-4 w-full min-w-[400px]'>
+    <>
       {isLoading ? (
-        <div>각 테마에 맞는 영화 불러오는 중...</div> // 로딩 플레이스홀더
+        <SlideSkeleton />
       ) : (
-        <div className='container mx-auto my-8'>
+        <div className='container mx-auto'>
           <div className='font-bold text-xl sm:text-3xl p-4'>{title}</div>
-          <div className='flex'>
-            <div className='flex gap-1 sm:gap-4 justify-center items-center p-4 w-full min-w-[400px]'>
-              <MdArrowBackIos
-                className='cursor-pointer'
-                size={60}
-                onClick={handlePrev}
-              />
+          <div className='flex items-center'>
+            <MdArrowBackIos
+              className='cursor-pointer w-20'
+              size={60}
+              onClick={handlePrev}
+            />
+            <div className='flex gap-1 sm:gap-4 justify-normal md:justify-around items-center py-4 w-full min-w-[400px] overflow-x-auto'>
               {content}
-              <MdArrowForwardIos
-                className='cursor-pointer'
-                size={60}
-                onClick={handleNext}
-              />
             </div>
+            <MdArrowForwardIos
+              className='cursor-pointer w-20'
+              size={60}
+              onClick={handleNext}
+            />
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
