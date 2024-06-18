@@ -32,13 +32,13 @@ export function MovieDetailBgSkeleton() {
   return (
     <div className='relative'>
       <div className='absolute top-0 left-0 w-full h-full bg-cover bg-center opacity-30'>
-        <MovieDetailSkeleton />
+        <MovieInfoSkeleton />
       </div>
     </div>
   );
 }
 
-export function MovieDetailSkeleton() {
+export function MovieInfoSkeleton() {
   return (
     <div className='flex flex-col sm:flex-row justify-center items-center p-8 sm:p-12'>
       <div className='min-w-[300px] min-h-[450px] z-10'></div>
@@ -63,5 +63,14 @@ export function CrewListSkeleton() {
 export function CrewCard() {
   return (
     <div className='flex flex-col justify-around shadow-lg bg-white mt-4 rounded-md mb-4' />
+  );
+}
+
+export function MovieDetailPageSkeleton() {
+  return (
+    <div className='min-h-[1700px]'>
+      <MovieDetailBgSkeleton />
+      <CrewListSkeleton />
+    </div>
   );
 }

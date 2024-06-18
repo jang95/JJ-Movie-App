@@ -33,7 +33,7 @@ const CreditsList = () => {
     crewType && (
       <>
         <p className='text-2xl font-semibold m-4'>{title}</p>
-        <div className='flex justify-around flex-wrap lg:gap-2 lg:flex-nowrap'>
+        <div className='p-4 flex justify-around flex-wrap lg:gap-2 lg:flex-nowrap overflow-x-auto'>
           <CrewCard crewList={crewType} />
         </div>
       </>
