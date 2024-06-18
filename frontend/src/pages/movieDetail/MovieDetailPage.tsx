@@ -99,7 +99,7 @@ const MovieDetailPage = () => {
   }
 
   return (
-    <div className='min-h-[1700px]'>
+    <div className='container mx-auto min-h-[1700px]'>
       {content}
       <CreditsList />
     </div>

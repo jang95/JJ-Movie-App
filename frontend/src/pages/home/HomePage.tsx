@@ -9,11 +9,11 @@ const sliders = [
 
 const HomePage = () => {
   return (
-    <>
+    <div className='container mx-auto'>
       {sliders.map((slider) => (
         <Slider key={slider.type} type={slider.type} title={slider.title} />
       ))}
-    </>
+    </div>
   );
 };
 
