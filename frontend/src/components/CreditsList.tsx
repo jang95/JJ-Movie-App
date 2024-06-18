@@ -31,12 +31,12 @@ const CreditsList = () => {
     title: string
   ) =>
     crewType && (
-      <section className='my-8'>
-        <h2 className='text-2xl font-semibold m-4'>{title}</h2>
-        <div className='flex justify-around flex-wrap'>
+      <>
+        <p className='text-2xl font-semibold m-4'>{title}</p>
+        <div className='flex justify-around flex-wrap lg:gap-2 lg:flex-nowrap'>
           <CrewCard crewList={crewType} />
         </div>
-      </section>
+      </>
     );
 
   return (

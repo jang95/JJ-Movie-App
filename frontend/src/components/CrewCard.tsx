@@ -38,11 +38,11 @@ const CrewCard = ({ crewList }: CrewCardProps) => {
         return (
           <div
             key={crew.credit_id}
-            className='max-w-[200px] shadow-lg bg-white mt-4 rounded-md mb-4'
+            className='flex flex-col justify-around shadow-lg bg-white mt-4 rounded-md mb-4'
             onClick={() => navigate(`/person/${crew.id}`)}
           >
             <img
-              className='w-full rounded-t-md'
+              className='w-[200px] h-[250px] rounded-t-md'
               src={
                 crew.profile_path !== null
                   ? `${FACE_URL}${crew.profile_path}`
@@ -50,9 +50,13 @@ const CrewCard = ({ crewList }: CrewCardProps) => {
               }
               alt={crew.name}
             />
-            <div className='px-6 py-4'>
-              <div className='font-bold text-xl mb-2'>{crew.name}</div>
-              <p className='text-gray-700 text-base'>{crew.original_name}</p>
+            <div className='p-4 w-[200px]'>
+              <div className='font-bold text-xl mb-2 whitespace-nowrap overflow-x-auto'>
+                {crew.name}
+              </div>
+              <p className='text-gray-700 text-base whitespace-nowrap overflow-x-auto'>
+                {crew.original_name}
+              </p>
             </div>
           </div>
         );

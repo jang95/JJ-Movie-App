@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { getAgeRatingClass, getPreferenceColor } from '../../util/rating';
 import CreditsList from '../../components/CreditsList';
+import { MovieDetailBgSkeleton, CrewListSkeleton } from '../../ui/Skeletons';
 
 const BACKGROUND_IMAGE_URL = 'https://media.themoviedb.org/t/p/w1280/';
 
@@ -11,7 +12,7 @@ const MovieDetailPage = () => {
   const { id } = useParams();
   const [ageRating, setAgeRating] = useState('');
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [id],
     queryFn: () => fetchMovieDetail(id),
   });
@@ -44,23 +45,22 @@ const MovieDetailPage = () => {
     data && data.vote_average ? Math.floor(data.vote_average * 10) : 0;
 
   const content = data ? (
-    <div className='flex flex-col sm:flex-row justify-center items-center p-8 sm:p-12'>
-      <div className='min-w-[300px] z-10'>
+    <div className='flex flex-col md:flex-row justify-center items-center p-8 sm:p-12 gap-2'>
+      <div className='min-w-[300px] min-h-[450px] z-10'>
         <img
           src={`https://media.themoviedb.org/t/p/w342/${data?.poster_path}`}
           alt={data?.title}
-          className=''
+          className='w-[300px] h-[450px]'
         />
       </div>
-      <div className='flex flex-col w-full sm:w-[700px] sm:pl-8 gap-4 mt-4 sm:mt-0'>
-        <span className='text-2xl sm:text-3xl font-bold mb-2'>
+      <div className='flex flex-col w-full md:w-[700px] md:pl-8 gap-4 mt-4 sm:mt-0'>
+        <span className='text-2xl md:text-3xl font-bold mb-2'>
           {data?.title}
           <sub className={`ml-2 p-1 rounded ${getAgeRatingClass(ageRating)}`}>
             {ageRating}
           </sub>
         </span>
-
-        <div className='flex flex-col gap-2 text-sm sm:text-base font-semibold'>
+        <div className='flex flex-col gap-2 text-sm md:text-base font-semibold'>
           <span>개봉일: {data?.release_date}</span>
           <span>장르: {data?.genres.map((genre) => `${genre.name} `)}</span>
           <span>
@@ -68,7 +68,6 @@ const MovieDetailPage = () => {
             시간 {data?.runtime && Math.floor(data?.runtime % 60)}분
           </span>
         </div>
-
         <div className='flex items-center font-semibold'>
           시청자 선호도:
           <span
@@ -79,8 +78,7 @@ const MovieDetailPage = () => {
             {userScore}%
           </span>
         </div>
-
-        <span className='text-lg sm:text-xl font-bold'>{data?.tagline}</span>
+        <span className='text-lg md:text-xl font-bold'>{data?.tagline}</span>
         <span className='font-extrabold'>{data?.overview}</span>
       </div>
     </div>
@@ -88,15 +86,23 @@ const MovieDetailPage = () => {
 
   return (
     <>
-      <div className='relative'>
-        <div
-          style={backgroundImageStyle}
-          className='absolute top-0 left-0 w-full h-full bg-cover bg-center opacity-30'
-        />
-        {content}
-      </div>
-
-      <CreditsList />
+      {isLoading ? (
+        <>
+          <MovieDetailBgSkeleton />
+          <CrewListSkeleton />
+        </>
+      ) : (
+        <>
+          <div className='relative'>
+            <div
+              style={backgroundImageStyle}
+              className='absolute top-0 left-0 w-full h-full bg-cover bg-center opacity-30'
+            />
+            {content}
+          </div>
+          <CreditsList />
+        </>
+      )}
     </>
   );
 };
