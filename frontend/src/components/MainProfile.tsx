@@ -22,7 +22,7 @@ const MainProfile = () => {
   }, [data, setCreditsData]);
 
   return (
-    <div>
+    <div className='flex flex-col py-8 px-4 gap-4 overflow-x-scroll'>
       <FeaturedMovies />
       <MovieTable />
     </div>

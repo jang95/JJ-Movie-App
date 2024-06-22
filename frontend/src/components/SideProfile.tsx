@@ -1,26 +1,26 @@
 import { usePersonDataStore } from '../store/person';
+import { SideProfileSkeleton } from '../ui/Skeletons';
 
 const PROFILE = 'https://media.themoviedb.org/t/p/w600_and_h900_bestv2/';
 
 const SideProfile = () => {
-  const { personData } = usePersonDataStore();
+  const { personData, isLoading } = usePersonDataStore();
 
-  if (!personData.profile) {
-    return <div>불러오는 중...</div>;
+  if (isLoading) {
+    return <SideProfileSkeleton />;
   }
+
   return (
-    <div className='flex flex-col'>
-      <section>
-        <div className='w-[300px] mb-8'>
-          <img
-            className='rounded-xl'
-            src={`${PROFILE}${personData.profile.profile_path}`}
-            alt={personData.profile.name}
-          />
-        </div>
+    <div className='flex max-md:flex-col 2xl:flex-col items-center py-8 px-4'>
+      <section className='mb-8'>
+        <img
+          className='rounded-xl w-[300px] h-[450px]'
+          src={`${PROFILE}${personData.profile.profile_path}`}
+          alt={personData.profile.name}
+        />
       </section>
 
-      <section className='flex flex-col gap-4'>
+      <section className='flex flex-col min-w-[400px] min-h-[300px] gap-4 py-4 px-12'>
         <span className='text-2xl font-semibold'>인물 정보</span>
         <p className='flex flex-col'>
           <strong>이름</strong>
@@ -38,12 +38,6 @@ const SideProfile = () => {
           <strong>출생지</strong>
           {personData.profile.place_of_birth}
         </p>
-        <ol className='flex flex-col'>
-          <strong>다른 언어 명칭</strong>
-          {personData.profile.also_known_as.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ol>
       </section>
     </div>
   );

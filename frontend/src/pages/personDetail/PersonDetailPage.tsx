@@ -8,21 +8,26 @@ import SideProfile from '../../components/SideProfile';
 
 const PersonDetailPage = () => {
   const { id } = useParams();
-  const { setProfileData } = usePersonDataStore();
+  const { setProfileData, setLoading } = usePersonDataStore();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [id, 'person'],
     queryFn: () => fetchPersonDetail(id),
   });
 
   useEffect(() => {
+    if (isLoading) {
+      setLoading(true);
+    }
+
     if (data) {
       setProfileData(data);
+      setLoading(false);
     }
-  }, [data, setProfileData]);
+  }, [data, isLoading, setLoading, setProfileData]);
 
   return (
-    <div className='flex flex-col lg:flex-row justify-center items-center lg:items-start py-12 px-8 gap-6'>
+    <div className='container flex flex-col mx-auto justify-center items-center 2xl:flex-row 2xl:items-start'>
       <SideProfile />
       <MainProfile />
     </div>
