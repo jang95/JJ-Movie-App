@@ -4,11 +4,11 @@ import Footer from '../components/Footer';
 
 const Root = () => {
   return (
-    <div className='container mx-auto'>
+    <>
       <Header />
       <Outlet />
       <Footer />
-    </div>
+    </>
   );
 };
 

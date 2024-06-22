@@ -21,14 +21,18 @@ const defaultPersonDetailResponse: PersonDetailResponse = {
 
 interface PersonStore {
   personData: { profile: PersonDetailResponse; credits: CreditsMovie[] };
+  isLoading: boolean;
   setProfileData: (profile: PersonDetailResponse) => void;
   setCreditsData: (credits: CreditsMovie[]) => void;
+  setLoading: (isLoading: boolean) => void;
 }
 
 export const usePersonDataStore = create<PersonStore>((set) => ({
   personData: { profile: defaultPersonDetailResponse, credits: [] },
+  isLoading: false,
   setProfileData: (profile) =>
     set((state) => ({ personData: { ...state.personData, profile } })),
   setCreditsData: (credits) =>
     set((state) => ({ personData: { ...state.personData, credits } })),
+  setLoading: (isLoading) => set({ isLoading }),
 }));
