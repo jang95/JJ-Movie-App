@@ -2,6 +2,8 @@ import { usePersonDataStore } from '../store/person';
 import { SideProfileSkeleton } from '../ui/Skeletons';
 
 const PROFILE = 'https://media.themoviedb.org/t/p/w600_and_h900_bestv2/';
+const BASE_IMAGE_URL =
+  'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-4-user-grey-d8fe957375e70239d6abdd549fd7568c89281b2179b5f4470e2e12895792dfa5.svg';
 
 const SideProfile = () => {
   const { personData, isLoading } = usePersonDataStore();
@@ -10,12 +12,18 @@ const SideProfile = () => {
     return <SideProfileSkeleton />;
   }
 
+  console.log('아무것도 없어?', personData.profile);
+
   return (
     <div className='flex max-md:flex-col 2xl:flex-col items-center py-8 px-4'>
       <section className='mb-8'>
         <img
           className='rounded-xl w-[300px] h-[450px]'
-          src={`${PROFILE}${personData.profile.profile_path}`}
+          src={
+            personData.profile.profile_path !== null
+              ? `${PROFILE}${personData.profile.profile_path}`
+              : BASE_IMAGE_URL
+          }
           alt={personData.profile.name}
         />
       </section>
@@ -32,11 +40,15 @@ const SideProfile = () => {
         </p>
         <p className='flex flex-col'>
           <strong>생년월일</strong>
-          {personData.profile.birthday}
+          {personData.profile.birthday
+            ? personData.profile.birthday
+            : '정보 없음'}
         </p>
         <p className='flex flex-col'>
           <strong>출생지</strong>
-          {personData.profile.place_of_birth}
+          {personData.profile.place_of_birth
+            ? personData.profile.place_of_birth
+            : '정보 없음'}
         </p>
       </section>
     </div>

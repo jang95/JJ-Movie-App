@@ -8,6 +8,10 @@ const MovieTable = () => {
     return <MovieTableSkeleton />;
   }
 
+  if (personData.credits.length === 0) {
+    return <></>;
+  }
+
   // 배우 영화 참여작 출시일에 맞춰 정렬
   const content = personData.credits
     .sort(

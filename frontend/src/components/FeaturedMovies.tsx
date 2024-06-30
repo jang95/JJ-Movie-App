@@ -13,6 +13,17 @@ const FeaturedMovies = () => {
     return <FeaturedMoviesSkeleton />;
   }
 
+  if (personData.credits.length === 0) {
+    return (
+      <>
+        <span className='text-3xl font-semibold pb-4'>
+          {personData.profile.name}의 유명 작품
+        </span>
+        <p>해당 내용에 대한 정보가 없습니다.</p>
+      </>
+    );
+  }
+
   const sortMovies = personData.credits
     .sort((a, b) => b.popularity - a.popularity)
     .slice(0, 5);
