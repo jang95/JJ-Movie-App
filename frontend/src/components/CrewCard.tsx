@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { ActorDetail, CrewDetail } from '../store/crew';
+import { ActorDetail, CrewDetail } from '../types/crew';
 
 const FACE_URL = 'https://media.themoviedb.org/t/p/w276_and_h350_face/';
 const BASE_IMAGE_URL =

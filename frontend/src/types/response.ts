@@ -11,9 +11,15 @@ export interface MoiveListResponse {
   total_results: number;
 }
 
-// Movie Detail
-export interface MovieDetail {
+// Basic Data
+interface Basic {
   adult: boolean;
+  id: number;
+  popularity: number;
+}
+
+// Movie Detail
+export interface MovieDetail extends Basic {
   backdrop_path: string;
   belongs_to_collection: {
     id: number;
@@ -24,13 +30,11 @@ export interface MovieDetail {
   budget: number;
   genres: Array<{ id: number; name: string }>;
   homepage: string;
-  id: number;
   imdb_id: string;
   origin_country: string[];
   original_language: string;
   original_title: string;
   overview: string;
-  popularity: number;
   poster_path: string;
   production_companies: Array<{
     id: number;
@@ -71,19 +75,16 @@ export interface MovieAgeRating {
   }>;
 }
 
-export interface PersonDetailResponse {
-  adult: boolean;
+export interface PersonDetailResponse extends Basic {
   also_known_as: string[];
   biography: string;
   birthday: string;
   deathday: string | null;
   gender: number;
   homepage: string | null;
-  id: number;
   imdb_id: string;
   known_for_department: string;
   name: string;
   place_of_birth: string;
-  popularity: number;
   profile_path: string;
 }
