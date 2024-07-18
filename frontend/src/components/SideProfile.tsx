@@ -12,13 +12,11 @@ const SideProfile = () => {
     return <SideProfileSkeleton />;
   }
 
-  console.log('아무것도 없어?', personData.profile);
-
   return (
     <div className='flex max-md:flex-col 2xl:flex-col items-center py-8 px-4'>
       <section className='mb-8'>
         <img
-          className='rounded-xl w-[300px] h-[450px]'
+          className='rounded-xl w-[300px] h-[450px] p-2'
           src={
             personData.profile.profile_path !== null
               ? `${PROFILE}${personData.profile.profile_path}`
@@ -28,7 +26,7 @@ const SideProfile = () => {
         />
       </section>
 
-      <section className='flex flex-col min-w-[400px] min-h-[300px] gap-4 py-4 px-12'>
+      <section className='flex flex-col min-w-[360px] min-h-[300px] gap-4 py-4 px-12'>
         <span className='text-2xl font-semibold'>인물 정보</span>
         <p className='flex flex-col'>
           <strong>이름</strong>

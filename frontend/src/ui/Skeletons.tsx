@@ -29,7 +29,7 @@ export function SlideCardSkeleton() {
 export function MovieDetailBgSkeleton() {
   return (
     <div className='relative bg-gray-200 animate-pulse'>
-      <div className='absolute top-0 left-0 w-full h-full bg-cover bg-center opacity-30'>
+      <div className=''>
         <MovieInfoSkeleton />
       </div>
     </div>
@@ -127,7 +127,7 @@ export function FeaturedMoviesCardSkeleton() {
 export function MovieTableSkeleton() {
   return (
     <>
-      <div className='text-3xl font-bold mb-4 '>출연 리스트</div>
+      <div className='text-3xl font-bold mb-4'>출연 리스트</div>
       <div className='shadow border-b border-gray-200 sm:rounded-lg'>
         <table className='w-full'>
           <thead className='bg-gray-200'>

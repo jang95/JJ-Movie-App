@@ -16,7 +16,7 @@ const FeaturedMovies = () => {
   if (personData.credits.length === 0) {
     return (
       <>
-        <span className='text-3xl font-semibold pb-4'>
+        <span className='text-xl text-center md:text-left md:text-3xl font-semibold pb-4'>
           {personData.profile.name}의 유명 작품
         </span>
         <p>해당 내용에 대한 정보가 없습니다.</p>
@@ -30,7 +30,7 @@ const FeaturedMovies = () => {
 
   return (
     <>
-      <span className='text-3xl font-semibold pb-4'>
+      <span className='text-xl text-center md:text-left md:text-3xl font-semibold pb-4'>
         {personData.profile.name}의 유명 작품
       </span>
       <div className='flex max-lg:flex-wrap gap-4 mb-8 justify-center'>
@@ -41,7 +41,7 @@ const FeaturedMovies = () => {
             onClick={() => navigate(`/movie/${movie.id}`)}
           >
             <img
-              className='rounded-md w-[200px] h-[300px] border'
+              className='rounded-md w-[200px] min-h-[300px] border object-cover'
               src={`${IMAGE_BASE_URL}${movie.poster_path}`}
               alt={movie.title}
             />

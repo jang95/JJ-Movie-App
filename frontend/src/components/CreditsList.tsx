@@ -3,8 +3,8 @@ import { fetchMovieCredits } from '../api/moviesApi';
 import { useParams } from 'react-router-dom';
 import CrewCard from './CrewCard';
 import { useEffect } from 'react';
-import { ActorDetail, CrewDetail, useCrewStore } from '../store/crew';
-
+import { useCrewStore } from '../store/crew';
+import { ActorDetail, CrewDetail } from '../types/crew';
 const CreditsList = () => {
   const { id } = useParams();
   const { setCrewList, crewList } = useCrewStore();
@@ -32,7 +32,9 @@ const CreditsList = () => {
   ) =>
     crewType && (
       <>
-        <p className='text-2xl font-semibold m-4'>{title}</p>
+        <p className='text-2xl text-center md:text-left font-semibold m-4'>
+          {title}
+        </p>
         <div className='p-4 flex justify-around flex-wrap lg:gap-2 lg:flex-nowrap overflow-x-auto'>
           <CrewCard crewList={crewType} />
         </div>
@@ -40,10 +42,10 @@ const CreditsList = () => {
     );
 
   return (
-    <>
+    <div className='mt-10'>
       {renderCrewSection(crewList.cast, '주요 출연진')}
       {renderCrewSection(crewList.crew, '주요 제작진')}
-    </>
+    </div>
   );
 };
 
