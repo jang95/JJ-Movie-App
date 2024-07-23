@@ -4,7 +4,7 @@ import { Movie } from './Movie';
  * Movise List
  * Top Rated, Popular, Upcoming, Now Playing
  */
-export interface MoiveListResponse {
+export interface MovieListResponse {
   page: number;
   results: Movie[];
   total_pages: number;

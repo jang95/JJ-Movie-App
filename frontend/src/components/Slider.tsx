@@ -4,16 +4,13 @@ import { fetchMoviesList } from '../api/moviesApi';
 import { MdArrowForwardIos, MdArrowBackIos } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { SlideSkeleton } from '../ui/Skeletons';
+import { SliderProps } from '../pages/home/HomePage';
+import SliderError from './error/SliderError';
 
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
 const IMAGE_SIZE = 200;
 const INDEX_COUNT = 5;
 const IMAGE_LAST_INDEX = 20;
-
-interface SliderProps {
-  type: string;
-  title: string;
-}
 
 const Slider = ({ type, title }: SliderProps) => {
   const navigate = useNavigate();
@@ -47,6 +44,14 @@ const Slider = ({ type, title }: SliderProps) => {
     return null;
   }, [data, indexRange, navigate]);
 
+  if (isLoading) {
+    return <SlideSkeleton />;
+  }
+
+  if (isError) {
+    return <SliderError type={type} title={title} />;
+  }
+
   const handleNext = () => {
     setIndexRange((prev) => {
       const newStart =
@@ -69,38 +74,26 @@ const Slider = ({ type, title }: SliderProps) => {
     });
   };
 
-  if (isError) {
-    return (
-      <div>
-        영화 정보를 가져오는데 실패 했습니다. 잠시 후 다시 시도해주세요.
-      </div>
-    );
-  }
-
   return (
     <>
-      {isLoading ? (
-        <SlideSkeleton />
-      ) : (
-        <div className='container mx-auto'>
-          <div className='font-bold text-xl sm:text-3xl p-4'>{title}</div>
-          <div className='flex items-center'>
-            <MdArrowBackIos
-              className='cursor-pointer w-20'
-              size={60}
-              onClick={handlePrev}
-            />
-            <div className='flex gap-1 sm:gap-4 justify-normal md:justify-around items-center py-4 w-full min-w-[400px] overflow-x-auto'>
-              {content}
-            </div>
-            <MdArrowForwardIos
-              className='cursor-pointer w-20'
-              size={60}
-              onClick={handleNext}
-            />
+      <div className='container mx-auto'>
+        <div className='font-bold text-xl sm:text-3xl p-4'>{title}</div>
+        <div className='flex items-center'>
+          <MdArrowBackIos
+            className='cursor-pointer w-20'
+            size={60}
+            onClick={handlePrev}
+          />
+          <div className='flex gap-1 sm:gap-4 justify-normal md:justify-around items-center py-4 w-full min-w-[400px] overflow-x-auto'>
+            {content}
           </div>
+          <MdArrowForwardIos
+            className='cursor-pointer w-20'
+            size={60}
+            onClick={handleNext}
+          />
         </div>
-      )}
+      </div>
     </>
   );
 };

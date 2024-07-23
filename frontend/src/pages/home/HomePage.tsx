@@ -7,9 +7,14 @@ const sliders = [
   { type: 'upcoming', title: '개봉 예정작' },
 ];
 
+export interface SliderProps {
+  type: string;
+  title: string;
+}
+
 const HomePage = () => {
   return (
-    <div className='container mx-auto'>
+    <div className='container flex flex-col items-center justify-center mx-auto min-h-[80vh]'>
       {sliders.map((slider) => (
         <Slider key={slider.type} type={slider.type} title={slider.title} />
       ))}

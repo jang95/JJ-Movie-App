@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {
-  MoiveListResponse,
+  MovieListResponse,
   MovieAgeRating,
   MovieDetail,
 } from '../types/response';
@@ -18,7 +18,7 @@ const commonParams = {
 // MovieList Now Playing, Popular, Top Rated, Upcoming
 export const fetchMoviesList = async (
   type: string
-): Promise<MoiveListResponse> => {
+): Promise<MovieListResponse> => {
   try {
     const response = await axios.get(`${MOVIE_BASE_URL}${type}`, {
       params: {
@@ -28,14 +28,14 @@ export const fetchMoviesList = async (
     });
     return response.data;
   } catch (error) {
-    throw new Error('영화 목록을 가져오는데 실패했습니다.');
+    throw new Error(`홈페이지 영화 목록을 가져오는데 실패했습니다.`);
   }
 };
 
 // Trending movie list (day, week)
 export const fetchMoviesTrending = async (
   type: string
-): Promise<MoiveListResponse> => {
+): Promise<MovieListResponse> => {
   try {
     const response = await axios.get(
       `https://api.themoviedb.org/3/trending/movie/${type}`,
@@ -55,7 +55,7 @@ export const fetchMoviesTrending = async (
 // Movie search Api
 export const fetchMovieSearch = async (
   text: string
-): Promise<MoiveListResponse> => {
+): Promise<MovieListResponse> => {
   try {
     const response = await axios.get(
       `https://api.themoviedb.org/3/search/movie`,
