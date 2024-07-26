@@ -12,6 +12,9 @@ const PersonDetailPage = lazy(
 );
 const SearchPage = lazy(() => import('./pages/search/SearchPage'));
 
+const LoginPage = lazy(() => import('./pages/login/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/register/RegisterPage'));
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -32,6 +35,14 @@ const router = createBrowserRouter([
       {
         path: '/search',
         element: <SearchPage />,
+      },
+      {
+        path: '/login',
+        element: <LoginPage />,
+      },
+      {
+        path: '/register',
+        element: <RegisterPage />,
       },
     ],
   },
