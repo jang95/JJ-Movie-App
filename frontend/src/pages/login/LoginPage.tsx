@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { useRef } from 'react';
+import { sendLoginRequest } from '../../api/authApi';
 
 const LoginPage = () => {
   const idRef = useRef<HTMLInputElement>(null);
@@ -14,23 +14,6 @@ const LoginPage = () => {
       formData.append('password', passwordRef.current.value);
 
       sendLoginRequest(formData);
-    }
-  };
-
-  const sendLoginRequest = async (formData: FormData) => {
-    try {
-      const response = await axios.post(
-        'http://localhost:5100/api/login',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-      console.log('response', response);
-    } catch (error) {
-      console.error('Error logging in:', error);
     }
   };
 
