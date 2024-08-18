@@ -18,7 +18,7 @@ const Login = () => {
   };
   return (
     <>
-      <p className='font-bold text-3xl p-6'>Sign In</p>
+      <p className='font-bold text-3xl p-6'>로그인</p>
 
       <form onSubmit={handleLoginSubmit}>
         <div className='flex flex-col gap-4'>
@@ -35,7 +35,7 @@ const Login = () => {
             placeholder='Password'
           />
           <button className='w-full h-10 rounded-xl bg-blue-400' type='submit'>
-            Sign In
+            로그인 하기
           </button>
         </div>
       </form>
