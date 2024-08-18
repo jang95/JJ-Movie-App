@@ -1,22 +1,99 @@
-import React, { useRef } from 'react';
+import { useCallback, useState } from 'react';
 import { sendRegisterRequest } from '../api/authApi';
+import InputField from './form/InputField';
+import { useNavigate } from 'react-router-dom';
+
+interface FormData {
+  email: string;
+  nickName: string;
+  password: string;
+  passwordCheck: string;
+}
 
 const Register = () => {
-  const emailRef = useRef<HTMLInputElement>(null);
-  const nickNameRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-  // const passwordCheckRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState<FormData>({
+    email: '',
+    nickName: '',
+    password: '',
+    passwordCheck: '',
+  });
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  // 이메일 유효성 검사
+  const validateEmail = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!validateEmail(formData.email)) {
+      newErrors.email = '올바른 이메일 형식을 입력해주세요.';
+    }
+
+    if (formData.nickName.trim() === '') {
+      newErrors.nickName = '닉네임을 입력해주세요.';
+    }
+
+    if (formData.password.length < 6) {
+      newErrors.password = '비밀번호는 최소 6자 이상이어야 합니다.';
+      newErrors.passwordCheck = '올바른 비밀번호 설정 후 확인 가능합니다.';
+    }
+
+    if (formData.password !== formData.passwordCheck) {
+      newErrors.passwordCheck = '비밀번호가 일치하지 않습니다.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    },
+    [setFormData]
+  );
+
+  const createFormData = (data: FormData) => {
+    const formData = new FormData();
+    formData.append('email', data.email);
+    formData.append('nickName', data.nickName);
+    formData.append('password', data.password);
+    return formData;
+  };
+
+  const submitRegistration = async (formData: FormData) => {
+    const data = createFormData(formData);
+    await sendRegisterRequest(data);
+  };
 
   const registerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (emailRef.current && nickNameRef.current && passwordRef.current) {
-      const formData = new FormData();
-      formData.append('email', emailRef.current.value);
-      formData.append('nickName', nickNameRef.current.value);
-      formData.append('password', passwordRef.current.value);
+    if (validateForm()) {
+      await submitRegistration(formData);
 
-      sendRegisterRequest(formData);
+      setFormData({
+        email: '',
+        nickName: '',
+        password: '',
+        passwordCheck: '',
+      });
+
+      const moveLoginPage = confirm(
+        '확인을 누르면 로그인 페이지로 이동합니다.'
+      );
+
+      if (moveLoginPage) {
+        navigate('/login');
+      }
     }
   };
 
@@ -26,30 +103,42 @@ const Register = () => {
 
       <form onSubmit={registerSubmit}>
         <div className='flex flex-col gap-4'>
-          <input
-            className='w-full h-10 px-8 rounded-xl focus:outline-none bg-gray-200 border-2 focus:border-blue-400'
-            ref={emailRef}
+          <InputField
+            label='Email'
             type='text'
-            placeholder='Email'
+            name='email'
+            value={formData.email}
+            placeholder='Your Email'
+            error={errors.email}
+            onChange={(e) => handleInputChange(e)}
           />
-          <input
-            className='w-full h-10 px-8 rounded-xl focus:outline-none bg-gray-200 border-2 focus:border-blue-400'
-            ref={nickNameRef}
+          <InputField
+            label='NickName'
             type='text'
-            placeholder='NickName'
+            name='nickName'
+            value={formData.nickName}
+            placeholder='Your NickName'
+            error={errors.nickName}
+            onChange={handleInputChange}
           />
-          <input
-            className='w-full h-10 px-8 rounded-xl focus:outline-none bg-gray-200 border-2 focus:border-blue-400'
-            ref={passwordRef}
+          <InputField
+            label='Password'
             type='password'
-            placeholder='Password'
+            name='password'
+            value={formData.password}
+            placeholder='Your Password'
+            error={errors.password}
+            onChange={handleInputChange}
           />
-          {/* <input
-            className='w-full h-10 px-8 rounded-xl focus:outline-none bg-gray-200 border-2 focus:border-blue-400'
-            ref={passwordCheckRef}
+          <InputField
+            label='PasswordCheck'
             type='password'
-            placeholder='Password check'
-          /> */}
+            name='passwordCheck'
+            value={formData.passwordCheck}
+            placeholder='Your Password check'
+            error={errors.passwordCheck}
+            onChange={handleInputChange}
+          />
           <button className='w-full h-10 rounded-xl bg-green-400' type='submit'>
             가입하기
           </button>
