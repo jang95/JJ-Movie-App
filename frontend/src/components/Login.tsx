@@ -10,7 +10,7 @@ const Login = () => {
 
     if (idRef.current && passwordRef.current) {
       const formData = new FormData();
-      formData.append('id', idRef.current.value);
+      formData.append('email', idRef.current.value);
       formData.append('password', passwordRef.current.value);
 
       sendLoginRequest(formData);

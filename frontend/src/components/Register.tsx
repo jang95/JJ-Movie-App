@@ -71,7 +71,12 @@ const Register = () => {
 
   const submitRegistration = async (formData: FormData) => {
     const data = createFormData(formData);
-    await sendRegisterRequest(data);
+    try {
+      await sendRegisterRequest(data);
+      navigate('/login');
+    } catch (error) {
+      alert('회원 가입에 실패했습니다. 다시 시도해주세요');
+    }
   };
 
   const registerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -79,21 +84,12 @@ const Register = () => {
 
     if (validateForm()) {
       await submitRegistration(formData);
-
       setFormData({
         email: '',
         nickName: '',
         password: '',
         passwordCheck: '',
       });
-
-      const moveLoginPage = confirm(
-        '확인을 누르면 로그인 페이지로 이동합니다.'
-      );
-
-      if (moveLoginPage) {
-        navigate('/login');
-      }
     }
   };
 
