@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { sendLoginRequest } from '../api/authApi';
+import bcrypt from 'bcryptjs-react';
 
 const Login = () => {
   const idRef = useRef<HTMLInputElement>(null);
@@ -9,9 +10,11 @@ const Login = () => {
     e.preventDefault();
 
     if (idRef.current && passwordRef.current) {
+      const password = bcrypt.hashSync(passwordRef.current.value, 10);
+
       const formData = new FormData();
       formData.append('email', idRef.current.value);
-      formData.append('password', passwordRef.current.value);
+      formData.append('password', password);
 
       sendLoginRequest(formData);
     }
