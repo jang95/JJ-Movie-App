@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import User, { IUser } from '../schemas/user';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 // 회원가입
@@ -9,20 +8,17 @@ export const register = async (req: Request, res: Response) => {
     const { email, password, nickName } = req.body as IUser;
 
     // 기존 사용자가 있는지 확인
-    const existingUser = await User.findOne({ email });
+    const findUser = await User.findOne({ email });
 
-    if (existingUser) {
+    if (findUser) {
       return res.status(400).json({ message: '이미 존재하는 이메일입니다.' });
     }
-
-    // 비밀번호 해시화
-    const hashedPassword = await bcrypt.hash(password, 10);
 
     // 새 사용자 생성
     const newUser = new User({
       nickName,
       email,
-      password: hashedPassword,
+      password,
     });
 
     // 사용자 저장
@@ -35,6 +31,7 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
+// 로그인
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body as IUser;
@@ -48,26 +45,38 @@ export const login = async (req: Request, res: Response) => {
         .json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
     }
 
-    // 비밀번호 확인
-    const isPasswordValid = await bcrypt.compare(password, checkUser.password);
-
-    if (!isPasswordValid) {
+    if (password === checkUser.password) {
       return res
         .status(400)
         .json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
     }
 
-    // JWT 토큰 생성
-    const token = jwt.sign(
+    // accessToken 생성
+    const accessToken = jwt.sign(
       { email: checkUser.email },
       process.env.JWT_SECRET!,
       { expiresIn: '1h' } // 토큰 만료 시간 설정
     );
 
+    const refreshToken = jwt.sign(
+      { email: checkUser.email },
+      process.env.REFRESH_TOKEN_SECRET!,
+      { expiresIn: '7d' }
+    );
+
+    // JWT 토큰 cookie에 저장
+    res.cookie('accessToken', accessToken, {
+      maxAge: 60 * 60 * 1000,
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     res.status(200).json({
       message: '로그인 성공',
-      token,
-      user: { email: checkUser.email, nickName: checkUser.nickName },
+      success: true,
+      // user: { email: checkUser.email, nickName: checkUser.nickName },
     });
   } catch (error) {
     console.error('로그인 오류:', error);
