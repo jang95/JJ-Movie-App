@@ -11,7 +11,11 @@ export const sendLoginRequest = async (formData: FormData) => {
     });
     console.log('response', response);
   } catch (error) {
-    console.error('Error logging in:', error);
+    // axiosError으로 타입 좁히기
+    if (axios.isAxiosError(error)) {
+      error.response?.status === 400 &&
+        alert('이메일 또는 비밀번호가 잘못되었습니다.');
+    }
   }
 };
 
@@ -25,6 +29,9 @@ export const sendRegisterRequest = async (formData: FormData) => {
     });
     console.log('response', response);
   } catch (error) {
-    console.error('회원가입 연결 오류', error);
+    if (axios.isAxiosError(error)) {
+      error.response?.status === 400 &&
+        alert('이미 같은 이메일이 사용 중 입니다.');
+    }
   }
 };
