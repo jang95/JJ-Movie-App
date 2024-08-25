@@ -59,7 +59,7 @@ export const login = async (req: Request, res: Response) => {
 
     const refreshToken = jwt.sign(
       { email: checkUser.email },
-      process.env.REFRESH_TOKEN_SECRET!,
+      process.env.JWT_REFRESH_SECRET!,
       { expiresIn: '7d' }
     );
 
