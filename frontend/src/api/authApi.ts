@@ -38,6 +38,37 @@ export const sendRegisterRequest = async (formData: FormData) => {
   }
 };
 
+// 로그인 확인
+export const verifyAuthLogin = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/check`, {
+      withCredentials: true,
+    });
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        const status = error.response.status;
+        switch (status) {
+          case 400:
+            alert('잘못된 요청입니다.');
+            break;
+          case 404:
+            alert('요청한 리소스를 찾을 수 없습니다.');
+            break;
+          default:
+            alert('알 수 없는 오류가 발생했습니다. 다시 시도해주세요.');
+            break;
+        }
+      }
+    } else {
+      // Axios 에러가 아닌 경우
+      alert('예상치 못한 오류가 발생했습니다.');
+    }
+  }
+};
+
 // 토큰 인증
 export const verifyAuthToken = async () => {
   try {

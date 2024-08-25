@@ -1,13 +1,34 @@
 import { Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
+// 로그인 검증
+export const verifyLogin = (req: Request, res: Response) => {
+  try {
+    const token = req.cookies.accessToken;
+
+    if (!token) {
+      return res.status(200).json({
+        message: '로그인하지 않았습니다.',
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: '로그인 확인',
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+  }
+};
+
 // 토큰 검증
 export const verifyToken = (req: Request, res: Response) => {
   try {
     const token = req.cookies.accessToken;
 
     if (!token) {
-      return res.status(401).json({ message: '인증 토큰이 없습니다.' });
+      return res.status(200).json({ message: '인증 토큰이 없습니다.' });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
