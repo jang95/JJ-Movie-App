@@ -51,11 +51,10 @@ export const login = async (req: Request, res: Response) => {
         .json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
     }
 
-    // accessToken 생성
     const accessToken = jwt.sign(
       { email: checkUser.email },
       process.env.JWT_SECRET!,
-      { expiresIn: '1h' } // 토큰 만료 시간 설정
+      { expiresIn: '1h' }
     );
 
     const refreshToken = jwt.sign(
@@ -64,19 +63,23 @@ export const login = async (req: Request, res: Response) => {
       { expiresIn: '7d' }
     );
 
-    // JWT 토큰 cookie에 저장
     res.cookie('accessToken', accessToken, {
-      maxAge: 60 * 60 * 1000,
+      httpOnly: true,
+      secure: false,
     });
 
     res.cookie('refreshToken', refreshToken, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: false,
     });
 
     res.status(200).json({
       message: '로그인 성공',
       success: true,
-      // user: { email: checkUser.email, nickName: checkUser.nickName },
+      user: {
+        email: checkUser.email,
+        nickName: checkUser.nickName,
+      },
     });
   } catch (error) {
     console.error('로그인 오류:', error);
