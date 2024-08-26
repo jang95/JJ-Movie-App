@@ -8,6 +8,7 @@ export const sendLoginRequest = async (formData: FormData) => {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      withCredentials: true,
     });
     console.log('response', response);
 
@@ -63,7 +64,6 @@ export const verifyAuthLogin = async () => {
         }
       }
     } else {
-      // Axios 에러가 아닌 경우
       alert('예상치 못한 오류가 발생했습니다.');
     }
   }
@@ -122,7 +122,7 @@ export const refreshAuthToken = async () => {
       `${BASE_URL}/refresh`,
       {},
       {
-        withCredentials: true, // 쿠키 포함
+        withCredentials: true,
       }
     );
 
@@ -154,7 +154,7 @@ export const refreshAuthToken = async () => {
         alert('서버와의 연결에 문제가 발생했습니다. 나중에 다시 시도해주세요.');
       } else {
         alert(
-          '리프레스 토큰 검증 중 문제가 발생했습니다. 오류 메시지: ' +
+          '리프레시 토큰 검증 중 문제가 발생했습니다. 오류 메시지: ' +
             error.message
         );
       }

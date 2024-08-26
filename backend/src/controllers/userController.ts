@@ -45,34 +45,43 @@ export const login = async (req: Request, res: Response) => {
         .json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
     }
 
+    // 비밀번호 일치 여부 확인 (암호화된 비밀번호 사용 시)
     if (password === checkUser.password) {
       return res
         .status(400)
         .json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
     }
 
+    // Access Token 생성
     const accessToken = jwt.sign(
       { email: checkUser.email },
       process.env.JWT_SECRET!,
-      { expiresIn: '1h' }
+      { expiresIn: '1d' }
     );
 
+    // Refresh Token 생성
     const refreshToken = jwt.sign(
       { email: checkUser.email },
       process.env.JWT_REFRESH_SECRET!,
       { expiresIn: '7d' }
     );
 
+    // 쿠키에 토큰 저장
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: false,
+      sameSite: 'none',
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: false,
+      sameSite: 'none',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
+    // 로그인 성공 응답
     res.status(200).json({
       message: '로그인 성공',
       success: true,
@@ -83,5 +92,6 @@ export const login = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('로그인 오류:', error);
+    res.status(500).json({ message: '서버 오류가 발생했습니다.' });
   }
 };
