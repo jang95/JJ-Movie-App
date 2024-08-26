@@ -1,6 +1,23 @@
 import axios from 'axios';
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
+// 회원가입
+export const sendRegisterRequest = async (formData: FormData) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/register`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log('response', response);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      error.response?.status === 400 &&
+        alert('이미 같은 이메일이 사용 중 입니다.');
+    }
+  }
+};
+
 // 로그인
 export const sendLoginRequest = async (formData: FormData) => {
   try {
@@ -22,19 +39,19 @@ export const sendLoginRequest = async (formData: FormData) => {
   }
 };
 
-// 회원가입
-export const sendRegisterRequest = async (formData: FormData) => {
+// 로그아웃
+export const sendLogoutRequest = async () => {
   try {
-    const response = await axios.post(`${BASE_URL}/register`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    console.log('response', response);
+    const response = await axios.post(
+      `${BASE_URL}/logout`,
+      {},
+      { withCredentials: true }
+    );
+
+    console.log('sendLogoutRequest', response);
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      error.response?.status === 400 &&
-        alert('이미 같은 이메일이 사용 중 입니다.');
+      console.log('로그아웃 오류 + error', error);
     }
   }
 };

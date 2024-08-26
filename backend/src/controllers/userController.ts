@@ -55,30 +55,28 @@ export const login = async (req: Request, res: Response) => {
     // Access Token 생성
     const accessToken = jwt.sign(
       { email: checkUser.email },
-      process.env.JWT_SECRET!,
-      { expiresIn: '1d' }
+      process.env.JWT_SECRET!
     );
 
     // Refresh Token 생성
     const refreshToken = jwt.sign(
       { email: checkUser.email },
-      process.env.JWT_REFRESH_SECRET!,
-      { expiresIn: '7d' }
+      process.env.JWT_REFRESH_SECRET!
     );
 
     // 쿠키에 토큰 저장
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
+      // sameSite: 'none',
       secure: false,
-      sameSite: 'none',
       maxAge: 24 * 60 * 60 * 1000,
     });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
+      // sameSite: 'none',
       secure: false,
-      sameSite: 'none',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 5 * 24 * 60 * 60 * 1000,
     });
 
     // 로그인 성공 응답
@@ -94,4 +92,21 @@ export const login = async (req: Request, res: Response) => {
     console.error('로그인 오류:', error);
     res.status(500).json({ message: '서버 오류가 발생했습니다.' });
   }
+};
+
+// 로그아웃
+export const logout = async (req: Request, res: Response) => {
+  res
+    .clearCookie('accessToken', {
+      httpOnly: true,
+      secure: true,
+      // sameSite: 'none',
+    })
+    .clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: true,
+      // sameSite: 'none',
+    });
+
+  res.status(200).json({ message: '로그아웃 성공' });
 };
