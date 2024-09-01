@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import { sendRegisterRequest } from '../api/authApi';
 import InputField from './form/InputField';
 import { useNavigate } from 'react-router-dom';
-import bcrypt from 'bcryptjs-react';
 
 interface FormData {
   email: string;
@@ -63,13 +62,10 @@ const Register = () => {
   );
 
   const createFormData = (data: FormData) => {
-    // 비밀번호 해시
-    const password = bcrypt.hashSync(data.password, 10);
-
     const formData = new FormData();
     formData.append('email', data.email);
     formData.append('nickName', data.nickName);
-    formData.append('password', password);
+    formData.append('password', data.password);
 
     return formData;
   };
