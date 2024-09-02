@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import User, { IUser } from '../schemas/user';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 // 회원가입
 export const register = async (req: Request, res: Response) => {
@@ -14,11 +15,13 @@ export const register = async (req: Request, res: Response) => {
       return res.status(400).json({ message: '이미 존재하는 이메일입니다.' });
     }
 
+    const hashPasswoard = bcrypt.hashSync(password, 10);
+
     // 새 사용자 생성
     const newUser = new User({
       nickName,
       email,
-      password,
+      password: hashPasswoard,
     });
 
     // 사용자 저장
@@ -45,48 +48,38 @@ export const login = async (req: Request, res: Response) => {
         .json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
     }
 
-    // 비밀번호 일치 여부 확인 (암호화된 비밀번호 사용 시)
-    if (password === checkUser.password) {
+    const matchPassword = await bcrypt.compare(password, checkUser.password);
+
+    if (!matchPassword) {
       return res
         .status(400)
         .json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
     }
 
-    // Access Token 생성
-    const accessToken = jwt.sign(
-      { email: checkUser.email },
-      process.env.JWT_SECRET!
-    );
+    // 토큰에 들어갈 내용
+    const user = { email: checkUser.email, nickName: checkUser.nickName };
 
-    // Refresh Token 생성
-    const refreshToken = jwt.sign(
-      { email: checkUser.email },
-      process.env.JWT_REFRESH_SECRET!
-    );
+    const accessToken = jwt.sign({ user }, process.env.JWT_SECRET!, {
+      expiresIn: '15m',
+    });
 
-    // 쿠키에 토큰 저장
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      // sameSite: 'none',
-      secure: false,
-      maxAge: 24 * 60 * 60 * 1000,
+    const refreshToken = jwt.sign({ user }, process.env.JWT_REFRESH_SECRET!, {
+      expiresIn: '7d',
     });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      // sameSite: 'none',
-      secure: false,
-      maxAge: 5 * 24 * 60 * 60 * 1000,
+      sameSite: 'strict',
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     // 로그인 성공 응답
     res.status(200).json({
       message: '로그인 성공',
       success: true,
-      user: {
-        email: checkUser.email,
-        nickName: checkUser.nickName,
-      },
+      accessToken,
+      user,
     });
   } catch (error) {
     console.error('로그인 오류:', error);
@@ -96,17 +89,23 @@ export const login = async (req: Request, res: Response) => {
 
 // 로그아웃
 export const logout = async (req: Request, res: Response) => {
-  res
-    .clearCookie('accessToken', {
-      httpOnly: true,
-      secure: true,
-      // sameSite: 'none',
-    })
-    .clearCookie('refreshToken', {
-      httpOnly: true,
-      secure: true,
-      // sameSite: 'none',
-    });
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+  });
 
   res.status(200).json({ message: '로그아웃 성공' });
+};
+
+// 회원탈퇴
+export const withdrawal = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.query;
+    await User.findOneAndDelete({ email });
+    res.status(204).json({ message: '회원탈퇴 완료', success: true });
+  } catch (error) {
+    console.error('회원탈퇴 오류:', error);
+    res.status(500).json({ message: '서버 오류로 회원탈퇴에 실패했습니다.' });
+  }
 };

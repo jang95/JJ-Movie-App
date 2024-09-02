@@ -44,7 +44,7 @@ export const sendLoginRequest = async (formData: FormData) => {
 // 로그아웃
 export const sendLogoutRequest = async () => {
   try {
-    const response = await axios.post(`${BASE_URL}/logout`, {});
+    const response = await api.post(`${BASE_URL}/logout`, {});
 
     useAuthStore.getState().clearAccessToken();
     useAuthStore.getState().clearUser();
@@ -178,6 +178,23 @@ export const refreshAuthToken = async () => {
       }
     } else {
       alert('알 수 없는 오류가 발생했습니다.');
+    }
+  }
+};
+
+// 회원탈퇴
+export const withdrawalRequset = async (email: string) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/withdrawal`, {
+      params: { email },
+    });
+    sendLogoutRequest();
+    console.log('withdrawalRequset', response.data.success);
+    alert('회원탈퇴 되었습니다.');
+    location.href = 'https://localhost:5173';
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('withdrawalRequset', error);
     }
   }
 };

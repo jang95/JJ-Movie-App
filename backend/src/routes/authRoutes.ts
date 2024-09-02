@@ -1,6 +1,11 @@
 import express from 'express';
 import multer from 'multer';
-import { register, login, logout } from '../controllers/userController';
+import {
+  register,
+  login,
+  logout,
+  withdrawal,
+} from '../controllers/userController';
 import {
   refreshAccessToken,
   verifyToken,
@@ -13,6 +18,7 @@ const upload = multer();
 router.post('/register', upload.none(), register);
 router.post('/login', upload.none(), login);
 router.post('/logout', logout);
+router.delete('/withdrawal', withdrawal);
 
 router.get('/token', verifyToken);
 router.get('/check', verifyLogin);
