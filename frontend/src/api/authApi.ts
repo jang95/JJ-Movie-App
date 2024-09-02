@@ -1,4 +1,6 @@
 import axios from 'axios';
+import api from './api';
+import { useAuthStore } from '../store/authStore';
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
 // 회원가입
@@ -29,7 +31,7 @@ export const sendLoginRequest = async (formData: FormData) => {
     });
     console.log('response', response);
 
-    return response.data.user;
+    return response.data;
   } catch (error) {
     // axiosError으로 타입 좁히기
     if (axios.isAxiosError(error)) {
@@ -42,11 +44,10 @@ export const sendLoginRequest = async (formData: FormData) => {
 // 로그아웃
 export const sendLogoutRequest = async () => {
   try {
-    const response = await axios.post(
-      `${BASE_URL}/logout`,
-      {},
-      { withCredentials: true }
-    );
+    const response = await axios.post(`${BASE_URL}/logout`, {});
+
+    useAuthStore.getState().clearAccessToken();
+    useAuthStore.getState().clearUser();
 
     console.log('sendLogoutRequest', response);
   } catch (error) {
@@ -59,7 +60,7 @@ export const sendLogoutRequest = async () => {
 // 로그인 확인
 export const verifyAuthLogin = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/check`, {
+    const response = await api.get(`${BASE_URL}/check`, {
       withCredentials: true,
     });
 
@@ -145,7 +146,7 @@ export const refreshAuthToken = async () => {
 
     console.log('refreshAuthToken', response);
 
-    return response;
+    return response.data.accessToken;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
