@@ -57,7 +57,11 @@ export const login = async (req: Request, res: Response) => {
     }
 
     // 토큰에 들어갈 내용
-    const user = { email: checkUser.email, nickName: checkUser.nickName };
+    const user = {
+      email: checkUser.email,
+      nickName: checkUser.nickName,
+      _id: checkUser._id,
+    };
 
     const accessToken = jwt.sign({ user }, process.env.JWT_SECRET!, {
       expiresIn: '15m',
