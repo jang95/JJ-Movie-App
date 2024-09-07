@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
-import { refreshAuthToken, sendLogoutRequest } from './authApi';
+import { attemptTokenRefresh } from './authApi';
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
-const parseJwt = (token: string) => {
+// jwt 토큰 파싱
+export const parseJwt = (token: string) => {
   const base64Url = token.split('.')[1]; // JWT의 페이로드 부분 추출
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   const jsonPayload = decodeURIComponent(
@@ -24,8 +25,7 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// 요청 전 interceptors
-// 토큰이 필요한 요청에 사용
+// 토큰이 필요한 요청 요청 전에 사용 interceptors
 api.interceptors.request.use(
   async (config) => {
     const accessToken = useAuthStore.getState().accessToken;
@@ -34,22 +34,16 @@ api.interceptors.request.use(
       const tokenExpirationTime = new Date(decodedToken.exp * 1000);
       const currentTime = new Date();
       if (tokenExpirationTime < currentTime) {
+        // 토큰 만료, 재발급 시도
         try {
-          const newAccessToken = await refreshAuthToken();
-          useAuthStore.getState().setAccessToken(newAccessToken);
+          const newAccessToken = await attemptTokenRefresh();
+          config.headers['Authorization'] = `Bearer ${newAccessToken}`;
         } catch (error) {
-          console.error('토큰 갱신 실패:', error);
-          // 토큰 갱신 실패 시 로그아웃 로직을 실행
-          await sendLogoutRequest();
-          const moveLoginPage = confirm('로그인 페이지로 이동하시겠습니까?');
-          if (moveLoginPage) {
-            location.href = 'https://localhost:5173/login';
-          }
+          console.error('토큰 갱신 처리 중 오류 발생:', error);
+          return Promise.reject(error);
         }
-        console.log('토큰이 만료되었습니다. 토큰 재발급 실행');
       } else {
         config.headers['Authorization'] = `Bearer ${accessToken}`;
-        console.log('토큰이 유효합니다.');
       }
     }
     return config;

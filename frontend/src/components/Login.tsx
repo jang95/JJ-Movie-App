@@ -1,9 +1,14 @@
 import React, { useRef } from 'react';
-import { sendLoginRequest } from '../api/authApi';
+import { sendLoginRequest } from '../api/userApi';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/authStore';
 
 const Login = () => {
+  const navigate = useNavigate();
   const idRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
+  const { setUser, setAccessToken } = useAuthStore();
 
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -12,7 +17,11 @@ const Login = () => {
       const formData = new FormData();
       formData.append('email', idRef.current.value);
       formData.append('password', passwordRef.current.value);
-      sendLoginRequest(formData);
+      const userData = await sendLoginRequest(formData);
+      console.log('userData', userData);
+      setUser(userData.user);
+      setAccessToken(userData.accessToken);
+      navigate('/');
     }
   };
   return (

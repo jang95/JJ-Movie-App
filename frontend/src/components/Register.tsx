@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { sendRegisterRequest } from '../api/authApi';
+import { sendRegisterRequest } from '../api/userApi';
 import InputField from './form/InputField';
 import { useNavigate } from 'react-router-dom';
 
