@@ -26,7 +26,7 @@ const SearchPage = () => {
           className='flex flex-col min-w-[300px] md:flex-row gap-4 shadow rounded-md m-2 border-gray-500'
           onClick={() => navigate(`/movie/${movie.id}`)}
         >
-          <div className='flex items-center min-w-[200px] max-w-[200px] mx-auto md:mx-0'>
+          <div className='flex items-center min-w-[200px] mx-auto md:mx-0'>
             <img
               className='w-[200px] h-[300px] rounded-md object-cover'
               src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}

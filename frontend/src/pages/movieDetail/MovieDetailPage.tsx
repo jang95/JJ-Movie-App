@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { fetchMovieDetail, fetchMovieReleaseDates } from '../../api/moviesApi';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,8 @@ const BACKGROUND_IMAGE_URL = 'https://media.themoviedb.org/t/p/w1280/';
 
 const MovieDetailPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [ageRating, setAgeRating] = useState('');
 
   const { data, isLoading } = useQuery({
@@ -90,6 +92,24 @@ const MovieDetailPage = () => {
                 {userScore}%
               </span>
             </div>
+            <div className='z-10'>
+              <button
+                className='text-white bg-lime-600 px-2 py-1 rounded'
+                onClick={() =>
+                  navigate(`/review/write/${id}`, {
+                    state: {
+                      id,
+                      title: data.title,
+                      release: data.release_date,
+                      overview: data.overview,
+                      poster: data.poster_path,
+                    },
+                  })
+                }
+              >
+                당신의 생각은 어떤가요?
+              </button>
+            </div>
             <span className='text-lg md:text-xl font-bold'>{data.tagline}</span>
             <span className='font-extrabold'>{data.overview}</span>
           </div>
@@ -99,7 +119,7 @@ const MovieDetailPage = () => {
   }
 
   return (
-    <div className='flex flex-col mx-auto sm:px-8'>
+    <div className='container flex flex-col mx-auto sm:px-8'>
       {content}
       <CreditsList />
     </div>
