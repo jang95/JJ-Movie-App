@@ -1,5 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import ReviewWritePage from './pages/review/ReviewWritePage';
+import PrivateRoute from './routes/PrivateRoute';
 
 // Lazy Loading 페이지 컴포넌트
 const HomePage = lazy(() => import('./pages/home/HomePage'));
@@ -43,6 +45,14 @@ const router = createBrowserRouter([
       {
         path: '/register',
         element: <RegisterPage />,
+      },
+      {
+        path: '/review/write/:id',
+        element: (
+          <PrivateRoute>
+            <ReviewWritePage />
+          </PrivateRoute>
+        ),
       },
     ],
   },
