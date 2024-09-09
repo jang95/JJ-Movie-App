@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes';
 import cookieParser from 'cookie-parser';
+import reviewRoutes from './routes/reviewRoutes';
 
 const app = express();
 
@@ -18,5 +19,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/', authRoutes);
+app.use('/review', reviewRoutes);
 
 export default app;
