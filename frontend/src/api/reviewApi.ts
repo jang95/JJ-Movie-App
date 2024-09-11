@@ -16,3 +16,20 @@ export const sendCreateReviewRequest = async (formData: FormData) => {
     }
   }
 };
+
+// 리뷰 조회
+export const sendViewReviewRequest = async (reviewId: string | undefined) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/review/view`, {
+      params: {
+        id: reviewId,
+      },
+    });
+    console.log('sendCreateReviewRequest', response);
+    return response.data.reviews;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      error.response?.status === 400 && alert('리뷰 조회에 실패했습니다.');
+    }
+  }
+};

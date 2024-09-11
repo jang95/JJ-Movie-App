@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 
 import { useLocation } from 'react-router-dom';
 import { useAuthStore } from './../../store/authStore';
-import { sendCreateReviewRequest } from '../../api/postApi';
+import { sendCreateReviewRequest } from '../../api/reviewApi';
 
 interface ReviewData {
   rating: number;
