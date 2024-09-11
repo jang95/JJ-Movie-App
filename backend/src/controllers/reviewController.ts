@@ -43,6 +43,18 @@ export const createReview = async (req: Request, res: Response) => {
   }
 };
 
+// 리뷰 조회
+export const viewReview = async (req: Request, res: Response) => {
+  const movieId = req.query.id;
+
+  try {
+    const reviews = await Review.find({ 'movie.id': movieId });
+    res.status(200).json({ message: '리뷰 조회', success: true, reviews });
+  } catch (error) {
+    console.error('리뷰 조회 오류', error);
+  }
+};
+
 // 리뷰 수정
 export const updateReview = (req: Request, res: Response) => {
   try {
