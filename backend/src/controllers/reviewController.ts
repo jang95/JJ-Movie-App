@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Review, { IMovie, IReviewDetail } from '../schemas/review';
 import { IUser } from '../schemas/user';
 
+// 리뷰 생성
 export const createReview = async (req: Request, res: Response) => {
   try {
     const review = JSON.parse(req.body.review) as IReviewDetail;
@@ -17,7 +18,6 @@ export const createReview = async (req: Request, res: Response) => {
 
     const newReview = new Review({
       review: {
-        title: review.title,
         content: review.content,
         rating: review.rating,
       },
@@ -43,6 +43,7 @@ export const createReview = async (req: Request, res: Response) => {
   }
 };
 
+// 리뷰 수정
 export const updateReview = (req: Request, res: Response) => {
   try {
     res.status(200).json({ message: '리뷰 수정', success: true });
@@ -51,6 +52,7 @@ export const updateReview = (req: Request, res: Response) => {
   }
 };
 
+// 리뷰 삭제
 export const deleteReview = (req: Request, res: Response) => {
   try {
     res.status(200).json({ message: '리뷰 삭제', success: true });

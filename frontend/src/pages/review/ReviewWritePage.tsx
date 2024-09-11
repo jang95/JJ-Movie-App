@@ -1,12 +1,10 @@
 import { useState, useCallback } from 'react';
 
 import { useLocation } from 'react-router-dom';
-import InputField from '../../components/form/InputField';
 import { useAuthStore } from './../../store/authStore';
 import { sendCreateReviewRequest } from '../../api/postApi';
 
 interface ReviewData {
-  title: string;
   rating: number;
   content: string;
 }
@@ -17,7 +15,6 @@ const ReviewWritePage = () => {
   const { user } = useAuthStore();
 
   const [review, setReview] = useState<ReviewData>({
-    title: '',
     rating: 0,
     content: '',
   });
@@ -26,32 +23,17 @@ const ReviewWritePage = () => {
   const reviewDataValidate = () => {
     const newErrors: { [key: string]: string } = {};
 
-    if (review.title.trim() === '') {
-      newErrors.title = '리뷰 제목을 입력해주세요';
-    }
-
     if (review.rating <= 0) {
       newErrors.rating = '평점은 최소 1점 입니다.';
     }
 
     if (review.content.trim().length <= 2) {
-      newErrors.rating = '리뷰 내용은 최소 2글자 이상입니다.';
+      newErrors.content = '리뷰 내용은 최소 2글자 이상입니다.';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setReview((prevReviewData) => ({
-        ...prevReviewData,
-        [name]: value,
-      }));
-    },
-    [setReview]
-  );
 
   const handleTextAreaChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -68,7 +50,6 @@ const ReviewWritePage = () => {
     const formData = new FormData();
 
     const review = {
-      title: data.title,
       rating: data.rating.toString(),
       content: data.content,
     };
@@ -121,24 +102,11 @@ const ReviewWritePage = () => {
         </div>
       </div>
       <div className='mt-8 bg-white p-8 border-4 rounded-lg'>
-        <h2 className='text-3xl font-bold mb-6 text-center'>리뷰 작성</h2>
         <form className='p-4' onSubmit={reviewSubmit}>
-          <InputField
-            label='리뷰'
-            type='text'
-            name='title'
-            value={review.title}
-            placeholder='리뷰 제목 작성해주세요'
-            error={errors.title}
-            onChange={handleInputChange}
-          />
-          <div className='mb-4'>
-            <label
-              htmlFor='rating'
-              className='block text-gray-700 text-2xl font-bold mb-2'
-            >
+          <div className='flex flex-col sm:flex-row mb-4 items-center gap-4'>
+            <span className='flex items-end h-10 text-gray-700 text-2xl font-bold'>
               평점을 남겨주세요
-            </label>
+            </span>
             <div id='rating' className='flex'>
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -158,6 +126,11 @@ const ReviewWritePage = () => {
                 </button>
               ))}
             </div>
+            {errors.rating && (
+              <span className='h-10 text-red-500 content-end'>
+                {errors.rating}
+              </span>
+            )}
           </div>
           <div className='mb-4'>
             <label
@@ -166,6 +139,9 @@ const ReviewWritePage = () => {
             >
               리뷰 작성
             </label>
+            {errors.content && (
+              <span className='text-red-500'>{errors.content}</span>
+            )}
             <textarea
               id='content'
               name='content'

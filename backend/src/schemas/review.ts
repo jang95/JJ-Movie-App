@@ -2,7 +2,6 @@ import mongoose, { Document, Schema } from 'mongoose';
 import { IUser } from './user';
 
 export interface IReviewDetail {
-  title: string;
   content: string;
   rating: number;
   tags?: string[];
@@ -22,11 +21,6 @@ export interface IReview extends Document {
 const reviewSchema = new Schema<IReview>(
   {
     review: {
-      title: {
-        type: String,
-        required: true,
-        trim: true,
-      },
       content: {
         type: String,
         required: true,
