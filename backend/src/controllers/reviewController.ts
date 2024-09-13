@@ -45,10 +45,10 @@ export const createReview = async (req: Request, res: Response) => {
 
 // 리뷰 조회
 export const viewReview = async (req: Request, res: Response) => {
-  const movieId = req.query.id;
+  const { id } = req.query;
 
   try {
-    const reviews = await Review.find({ 'movie.id': movieId });
+    const reviews = await Review.find({ 'movie.id': id });
     res.status(200).json({ message: '리뷰 조회', success: true, reviews });
   } catch (error) {
     console.error('리뷰 조회 오류', error);
@@ -65,8 +65,10 @@ export const updateReview = (req: Request, res: Response) => {
 };
 
 // 리뷰 삭제
-export const deleteReview = (req: Request, res: Response) => {
+export const deleteReview = async (req: Request, res: Response) => {
   try {
+    const { id } = req.query;
+    await Review.findOneAndDelete({ _id: id });
     res.status(200).json({ message: '리뷰 삭제', success: true });
   } catch (error) {
     console.error('리뷰 삭제 오류', error);

@@ -33,3 +33,19 @@ export const sendViewReviewRequest = async (reviewId: string | undefined) => {
     }
   }
 };
+
+// 리뷰 삭제
+export const sendDeleteReviewRequset = async (reviewId: string) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/review/delete`, {
+      params: {
+        id: reviewId,
+      },
+    });
+    console.log('sendDeleteReviewRequset', response);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      error.response?.status === 400 && alert('리뷰 삭제에 실패했습니다.');
+    }
+  }
+};
