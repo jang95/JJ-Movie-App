@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Review, { IMovie, IReviewDetail } from '../schemas/review';
 import { IUser } from '../schemas/user';
+import { Types } from 'mongoose';
 
 // 리뷰 생성
 export const createReview = async (req: Request, res: Response) => {
@@ -9,13 +10,29 @@ export const createReview = async (req: Request, res: Response) => {
     const author = JSON.parse(req.body.author) as IUser;
     const movie = JSON.parse(req.body.movie) as IMovie;
 
-    if (!review || !author || !movie) {
+    // 필수 데이터 누락 시 에러 반환
+    if (!review || !review.content || !review.rating) {
       return res.status(400).json({
-        message: '필수 데이터가 빠져 리뷰 저장 할 수 없습니다.',
+        message: '리뷰 정보가 누락되었습니다.',
         success: false,
       });
     }
 
+    if (!author || !author._id || !author.nickName || !author.email) {
+      return res.status(400).json({
+        message: '작성자 정보가 누락되었습니다.',
+        success: false,
+      });
+    }
+
+    if (!movie || !movie.id || !movie.title) {
+      return res.status(400).json({
+        message: '영화 정보가 누락되었습니다.',
+        success: false,
+      });
+    }
+
+    // 새로운 리뷰 객체 생성
     const newReview = new Review({
       review: {
         content: review.content,
@@ -32,18 +49,21 @@ export const createReview = async (req: Request, res: Response) => {
       },
     });
 
+    // 리뷰 저장
     await newReview.save();
 
-    res
-      .status(200)
-      .json({ message: '리뷰 작성', success: true, review: newReview });
+    return res.status(201).json({
+      message: '리뷰가 성공적으로 작성되었습니다.',
+      success: true,
+      review: newReview,
+    });
   } catch (error) {
     console.error('리뷰 작성 오류', error);
     res.status(500).json({ message: '리뷰 작성 실패', success: false });
   }
 };
 
-// 리뷰 조회
+// 리뷰 목록 조회
 export const viewReview = async (req: Request, res: Response) => {
   const { id } = req.query;
 
@@ -56,8 +76,30 @@ export const viewReview = async (req: Request, res: Response) => {
 };
 
 // 리뷰 수정
-export const updateReview = (req: Request, res: Response) => {
+export const updateReview = async (req: Request, res: Response) => {
   try {
+    const { review } = req.body as {
+      review: IReviewDetail;
+    };
+
+    if (!review) {
+      return res.status(400).json({
+        message: '필수 데이터가 빠져 리뷰 수정 할 수 없습니다.',
+        success: false,
+      });
+    }
+
+    await Review.findOneAndUpdate(
+      { _id: review._id },
+      {
+        $set: {
+          'review.content': review.content,
+          'review.rating': review.rating,
+        },
+      },
+      { new: true }
+    );
+
     res.status(200).json({ message: '리뷰 수정', success: true });
   } catch (error) {
     console.error('리뷰 수정 오류', error);
@@ -72,5 +114,22 @@ export const deleteReview = async (req: Request, res: Response) => {
     res.status(200).json({ message: '리뷰 삭제', success: true });
   } catch (error) {
     console.error('리뷰 삭제 오류', error);
+  }
+};
+
+// 리뷰 조회
+export const findReview = async (req: Request, res: Response) => {
+  const { userId, movieId } = req.query;
+
+  try {
+    const review = await Review.findOne({
+      'author._id': new Types.ObjectId(userId as string),
+      'movie.id': movieId,
+    });
+
+    console.log('review', review);
+    res.status(200).json({ message: '리뷰 조회', success: true, review });
+  } catch (error) {
+    console.error('리뷰 조회 오류', error);
   }
 };

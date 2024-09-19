@@ -2,6 +2,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 import { IUser } from './user';
 
 export interface IReviewDetail {
+  _id: string;
   content: string;
   rating: number;
   tags?: string[];
