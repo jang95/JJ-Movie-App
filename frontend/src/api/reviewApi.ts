@@ -17,7 +17,7 @@ export const sendCreateReviewRequest = async (formData: FormData) => {
   }
 };
 
-// 리뷰 조회
+// 리뷰 목록 조회
 export const sendViewReviewRequest = async (reviewId: string | undefined) => {
   try {
     const response = await axios.get(`${BASE_URL}/review/view`, {
@@ -25,11 +25,11 @@ export const sendViewReviewRequest = async (reviewId: string | undefined) => {
         id: reviewId,
       },
     });
-    console.log('sendCreateReviewRequest', response);
+    console.log('sendViewReviewRequest', response);
     return response.data.reviews;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      error.response?.status === 400 && alert('리뷰 조회에 실패했습니다.');
+      error.response?.status === 400 && alert('리뷰 목록 조회에 실패했습니다.');
     }
   }
 };
@@ -46,6 +46,43 @@ export const sendDeleteReviewRequset = async (reviewId: string) => {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       error.response?.status === 400 && alert('리뷰 삭제에 실패했습니다.');
+    }
+  }
+};
+
+// 리뷰 조회
+export const sendGetReviewRequset = async (
+  userId: string | undefined,
+  movieId: number
+) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/review/find`, {
+      params: {
+        userId,
+        movieId,
+      },
+    });
+    console.log('sendGetReviewRequset', response);
+    return response.data.review;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      error.response?.status === 400 && alert('리뷰 조회에 실패했습니다.');
+    }
+  }
+};
+
+// 리뷰 수정
+export const sendUpdateReviewRequest = async (formData: FormData) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/review/update`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log('sendUpdateReviewRequest', response);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      error.response?.status === 400 && alert('리뷰 수정에 실패했습니다.');
     }
   }
 };

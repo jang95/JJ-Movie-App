@@ -1,17 +1,16 @@
 import { useState, useCallback } from 'react';
-
-import { useLocation } from 'react-router-dom';
 import { useAuthStore } from './../../store/authStore';
 import { sendCreateReviewRequest } from '../../api/reviewApi';
+import { useMovieStore } from '../../store/movieStore';
 
-interface ReviewData {
+export interface ReviewData {
+  _id?: string;
   rating: number;
   content: string;
 }
 
 const ReviewWritePage = () => {
-  const location = useLocation();
-  const { id, title, release, overview, poster } = location.state;
+  const { movie } = useMovieStore();
   const { user } = useAuthStore();
 
   const [review, setReview] = useState<ReviewData>({
@@ -54,9 +53,9 @@ const ReviewWritePage = () => {
       content: data.content,
     };
 
-    const movie = {
-      id,
-      title,
+    const movieData = {
+      id: movie!.id,
+      title: movie!.title,
     };
 
     const author = {
@@ -66,7 +65,7 @@ const ReviewWritePage = () => {
     };
 
     formData.append('review', JSON.stringify(review));
-    formData.append('movie', JSON.stringify(movie));
+    formData.append('movie', JSON.stringify(movieData));
     formData.append('author', JSON.stringify(author));
 
     return formData;
@@ -79,7 +78,10 @@ const ReviewWritePage = () => {
       const data = createFormData(review);
       try {
         await sendCreateReviewRequest(data);
+        window.location.replace(`/movie/${movie!.id}`);
       } catch (error) {
+        // Todo
+        // 에러 처리 자세히 하기
         console.log('리뷰 생성 오류');
       }
     }
@@ -91,14 +93,14 @@ const ReviewWritePage = () => {
         <div className='min-w-[200px]'>
           <img
             className='w-[200px] h-[300px] rounded-md object-cover'
-            src={`https://media.themoviedb.org/t/p/w342/${poster}`}
-            alt={title}
+            src={`https://media.themoviedb.org/t/p/w342/${movie!.poster_path}`}
+            alt={movie!.title}
           />
         </div>
         <div className='flex flex-col gap-4 p-4'>
-          <h2 className='text-2xl font-semibold'>{title}</h2>
-          <p className='text-xl'>개봉일: {release}</p>
-          <p>{overview}</p>
+          <h2 className='text-2xl font-semibold'>{movie!.title}</h2>
+          <p className='text-xl'>개봉일: {movie!.release_date}</p>
+          <p>{movie!.overview}</p>
         </div>
       </div>
       <div className='mt-8 bg-white p-8 border-4 rounded-lg'>
@@ -107,6 +109,7 @@ const ReviewWritePage = () => {
             <span className='flex items-end h-10 text-gray-700 text-2xl font-bold'>
               평점을 남겨주세요
             </span>
+            {/* Todo... component 분리하기 */}
             <div id='rating' className='flex'>
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
