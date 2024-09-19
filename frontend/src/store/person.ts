@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { PersonDetailResponse } from '../types/response';
-import { CreditsMovie } from '../types/Movie';
+import { CreditsMovie } from '../types/movie';
 
 const defaultPersonDetailResponse: PersonDetailResponse = {
   adult: false,
