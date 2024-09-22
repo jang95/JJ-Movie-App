@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { usePersonDataStore } from '../store/person';
 import { FeaturedMoviesSkeleton } from '../ui/Skeletons';
+import { usePersonDataStore } from '../store/personStore';
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 

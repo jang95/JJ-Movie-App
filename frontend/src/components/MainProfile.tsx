@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { usePersonDataStore } from '../store/person';
 import { fetchPersonMovie_credits } from '../api/personApi';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import MovieTable from './MovieTable';
 import FeaturedMovies from './FeaturedMovies';
+import { usePersonDataStore } from '../store/personStore';
 
 const MainProfile = () => {
   const { setCreditsData } = usePersonDataStore();

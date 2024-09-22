@@ -1,4 +1,4 @@
-import { usePersonDataStore } from '../store/person';
+import { usePersonDataStore } from '../store/personStore';
 import { SideProfileSkeleton } from '../ui/Skeletons';
 
 const PROFILE = 'https://media.themoviedb.org/t/p/w600_and_h900_bestv2/';

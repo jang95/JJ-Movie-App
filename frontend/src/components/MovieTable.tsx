@@ -1,4 +1,4 @@
-import { usePersonDataStore } from '../store/person';
+import { usePersonDataStore } from '../store/personStore';
 import { MovieTableSkeleton } from '../ui/Skeletons';
 
 const MovieTable = () => {

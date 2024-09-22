@@ -3,8 +3,8 @@ import { fetchMovieCredits } from '../api/moviesApi';
 import { useParams } from 'react-router-dom';
 import CrewCard from './CrewCard';
 import { useEffect } from 'react';
-import { useCrewStore } from '../store/crew';
 import { ActorDetail, CrewDetail } from '../types/crew';
+import { useCrewStore } from '../store/crewStore';
 const CreditsList = () => {
   const { id } = useParams();
   const { setCrewList, crewList } = useCrewStore();

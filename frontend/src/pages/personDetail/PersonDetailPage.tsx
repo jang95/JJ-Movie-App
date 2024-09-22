@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { fetchPersonDetail } from '../../api/personApi';
 import { useEffect } from 'react';
-import { usePersonDataStore } from '../../store/person';
 import MainProfile from '../../components/MainProfile';
 import SideProfile from '../../components/SideProfile';
+import { usePersonDataStore } from '../../store/personStore';
 
 const PersonDetailPage = () => {
   const { id } = useParams();

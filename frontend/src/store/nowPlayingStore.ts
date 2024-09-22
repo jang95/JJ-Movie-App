@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Movie } from './../types/Movie';
+import { Movie } from '../types/movie';
 
 interface NowPlayingStore {
   movieList: Movie[];
