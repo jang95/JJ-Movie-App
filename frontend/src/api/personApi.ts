@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CreditsMovie } from '../types/Movie';
+import { CreditsMovie } from '../types/movie';
 const API_KEY: string = import.meta.env.VITE_TMDB_API_KEY;
 
 export const fetchPersonDetail = async (id: string | undefined) => {

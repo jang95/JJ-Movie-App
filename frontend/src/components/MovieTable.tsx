@@ -9,7 +9,14 @@ const MovieTable = () => {
   }
 
   if (personData.credits.length === 0) {
-    return <></>;
+    return (
+      <>
+        <div className='text-2xl text-center md:text-3xl md:text-left font-bold mb-4'>
+          출연 리스트
+        </div>
+        <span>해당 인물의 직접 출연작이 없습니다.</span>
+      </>
+    );
   }
 
   // 배우 영화 참여작 출시일에 맞춰 정렬
@@ -19,7 +26,7 @@ const MovieTable = () => {
         new Date(a.release_date).getTime() - new Date(b.release_date).getTime()
     )
     .map((movie) => (
-      <tr key={movie.title} className='hover:bg-gray-100'>
+      <tr key={movie.id} className='hover:bg-gray-100'>
         <td className='px-3 py-4 text-sm font-medium text-gray-900'>
           {movie.title}
         </td>
