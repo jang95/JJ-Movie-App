@@ -48,6 +48,7 @@ export const sendLogoutRequest = async () => {
 
     useAuthStore.getState().clearAccessToken();
     useAuthStore.getState().clearUser();
+    localStorage.removeItem('auth-storage');
 
     console.log('sendLogoutRequest', response);
   } catch (error) {

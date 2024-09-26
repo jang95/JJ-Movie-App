@@ -5,50 +5,35 @@ import SearchBar from './SearchBar';
 import { FiMenu } from 'react-icons/fi';
 import { IoIosLogIn } from 'react-icons/io';
 import { useAuthStore } from '../store/authStore';
-import { useEffect } from 'react';
-import {
-  sendLogoutRequest,
-  verifyAuthLogin,
-  verifyAuthToken,
-} from '../api/authApi';
+import MenuBar from './MenuBar';
+import { useState, useEffect, useRef } from 'react';
 
 const Header = () => {
+  const [isShow, setIsShow] = useState(false);
   const { user } = useAuthStore();
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // testUser();
-  }, []);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsShow(false);
+      }
+    };
 
-  const testUser = async () => {
-    try {
-      const status = await verifyAuthLogin();
-      console.log('status', status);
-    } catch (error) {
-      console.log(error);
+    if (isShow) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
     }
-  };
 
-  const testToken = async () => {
-    try {
-      const status = await verifyAuthToken();
-      console.log('status', status);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const userLogout = async () => {
-    try {
-      const status = await sendLogoutRequest();
-      console.log('status', status);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isShow]);
 
   return (
-    <header className='shadow sticky top-0 z-20 bg-yellow-100 min-w-[400px] '>
-      <div className='max-w-[1280px] flex justify-evenly sm:justify-between mx-auto p-6 items-center'>
+    <header className='shadow sticky top-0 z-20 bg-yellow-100 min-w-[400px]'>
+      <div className='max-w-[1280px] flex justify-between mx-auto p-6 items-center'>
         <div className='items-center hidden sm:flex'>
           <Link to='/' className='font-bold text-gray-800'>
             <picture>
@@ -58,16 +43,20 @@ const Header = () => {
           </Link>
         </div>
         <SearchBar />
-        <button onClick={userLogout}>로그아웃</button>
-        <button onClick={testUser}>로그인 확인</button>
-        <button onClick={testToken}>토큰 확인</button>
         <div className='flex items-end'>
           {!user ? (
             <Link to='/login' className='text-2xl font-bold text-gray-800'>
               <IoIosLogIn size={30} />
             </Link>
           ) : (
-            <FiMenu size={30} />
+            <div className='w-20 sm:w-28' ref={menuRef}>
+              <FiMenu
+                className='cursor-pointer mx-auto'
+                size={30}
+                onClick={() => setIsShow(!isShow)}
+              />
+              {isShow && <MenuBar />}
+            </div>
           )}
         </div>
       </div>

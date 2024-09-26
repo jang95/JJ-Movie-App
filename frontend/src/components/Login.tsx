@@ -39,17 +39,21 @@ const Login = () => {
   };
 
   const movePage = () => {
-    const from = location.state?.from?.pathname || '/';
-    const { id, title, release, overview, poster } = location.state;
-    navigate(from, {
-      state: {
-        id,
-        title,
-        release,
-        overview,
-        poster,
-      },
-    });
+    if (location.state === null) {
+      navigate('/');
+    } else {
+      const { id, title, release, overview, poster } = location.state;
+      const from = location.state?.from?.pathname;
+      navigate(from, {
+        state: {
+          id,
+          title,
+          release,
+          overview,
+          poster,
+        },
+      });
+    }
   };
 
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

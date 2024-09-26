@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export interface IUser {
   _id: string;
@@ -16,8 +16,8 @@ interface AuthStateStore {
   clearUser: () => void;
 }
 
-export const useAuthStore = create(
-  persist<AuthStateStore>(
+export const useAuthStore = create<AuthStateStore>()(
+  persist(
     (set) => ({
       user: null,
       accessToken: null,
