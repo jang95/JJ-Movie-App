@@ -4,8 +4,8 @@ import https from 'https';
 import path from 'path';
 import fs from 'fs';
 
-const certPath = path.resolve(__dirname, '../../certs', 'cert.pem');
-const keyPath = path.resolve(__dirname, '../../certs', 'key.pem');
+const certPath = path.resolve(__dirname, '../certs', 'cert.pem');
+const keyPath = path.resolve(__dirname, '../certs', 'key.pem');
 
 const privateKey = fs.readFileSync(keyPath, 'utf8');
 const certificate = fs.readFileSync(certPath, 'utf8');
