@@ -1,8 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import ReviewWritePage from './pages/review/ReviewWritePage';
 import PrivateRoute from './routes/PrivateRoute';
-import ReviewEditPage from './pages/review/ReviewEditPage';
+import MypagePage from './pages/mypage/MypagePage';
 
 // Lazy Loading 페이지 컴포넌트
 const HomePage = lazy(() => import('./pages/home/HomePage'));
@@ -17,6 +16,9 @@ const SearchPage = lazy(() => import('./pages/search/SearchPage'));
 
 const LoginPage = lazy(() => import('./pages/login/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/register/RegisterPage'));
+
+const ReviewWritePage = lazy(() => import('./pages/review/ReviewWritePage'));
+const ReviewEditPage = lazy(() => import('./pages/review/ReviewEditPage'));
 
 const router = createBrowserRouter([
   {
@@ -60,6 +62,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <ReviewEditPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/mypage/:name',
+        element: (
+          <PrivateRoute>
+            <MypagePage />
           </PrivateRoute>
         ),
       },
