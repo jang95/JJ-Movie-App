@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import User, { IUser } from '../schemas/user';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { Types } from 'mongoose';
+import Review from '../schemas/review';
 
 // 회원가입
 export const register = async (req: Request, res: Response) => {
@@ -111,5 +113,21 @@ export const withdrawal = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('회원탈퇴 오류:', error);
     res.status(500).json({ message: '서버 오류로 회원탈퇴에 실패했습니다.' });
+  }
+};
+
+// 사용자 작성 리뷰 조회
+export const findUserReviews = async (req: Request, res: Response) => {
+  const { userId } = req.query;
+
+  try {
+    const reviews = await Review.find({
+      'author._id': new Types.ObjectId(userId as string),
+    });
+    res
+      .status(200)
+      .json({ message: '사용자 리뷰 조회', success: true, reviews });
+  } catch (error) {
+    console.error('사용자의 리뷰를 가져오는데 실패했습니다.', error);
   }
 };
