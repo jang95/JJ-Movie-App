@@ -105,3 +105,17 @@ export const withdrawalRequset = async (email: string) => {
     }
   }
 };
+
+// 사용자 리뷰 조회
+export const sendGetUserReviews = async (userId: string | undefined) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/review/findUserReviews`, {
+      params: { userId },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('findUserReviews', error);
+    }
+  }
+};
