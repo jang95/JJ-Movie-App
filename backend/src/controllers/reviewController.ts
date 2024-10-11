@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Review, { IMovie, IReviewDetail } from '../schemas/review';
 import { IUser } from '../schemas/user';
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
 // 리뷰 생성
 export const createReview = async (req: Request, res: Response) => {
@@ -78,9 +78,7 @@ export const viewReview = async (req: Request, res: Response) => {
 // 리뷰 수정
 export const updateReview = async (req: Request, res: Response) => {
   try {
-    const { review } = req.body as {
-      review: IReviewDetail;
-    };
+    const review = JSON.parse(req.body.review) as IReviewDetail;
 
     if (!review) {
       return res.status(400).json({
@@ -89,8 +87,12 @@ export const updateReview = async (req: Request, res: Response) => {
       });
     }
 
+    // review 객체에서 최상위 _id에 접근
+    const objectId = new mongoose.Types.ObjectId(review._id);
+
+    // 리뷰 업데이트
     await Review.findOneAndUpdate(
-      { _id: review._id },
+      { objectId },
       {
         $set: {
           'review.content': review.content,
@@ -103,6 +105,7 @@ export const updateReview = async (req: Request, res: Response) => {
     res.status(200).json({ message: '리뷰 수정', success: true });
   } catch (error) {
     console.error('리뷰 수정 오류', error);
+    res.status(500).json({ message: '서버 오류', success: false });
   }
 };
 
@@ -127,7 +130,6 @@ export const findReview = async (req: Request, res: Response) => {
       'movie.id': movieId,
     });
 
-    console.log('review', review);
     res.status(200).json({ message: '리뷰 조회', success: true, review });
   } catch (error) {
     console.error('리뷰 조회 오류', error);

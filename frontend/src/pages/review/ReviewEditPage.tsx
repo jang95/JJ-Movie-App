@@ -23,7 +23,6 @@ const ReviewEditPage = () => {
   useEffect(() => {
     const getReview = async () => {
       const review = await sendGetReviewRequset(user?._id, movie!.id);
-      console.log('getReview', review);
       setReviewData(review);
     };
 
@@ -31,7 +30,6 @@ const ReviewEditPage = () => {
   }, [movie, user?._id]);
 
   const setReviewData = (data: IReview) => {
-    console.log('setReviewData', data);
     const { review, _id } = data;
     setReview((prevReviewData) => ({
       ...prevReviewData,
@@ -76,20 +74,7 @@ const ReviewEditPage = () => {
       content: data.content,
     };
 
-    const movieData = {
-      id: movie!.id,
-      title: movie!.title,
-    };
-
-    const author = {
-      _id: user?._id,
-      nickName: user?.nickName,
-      email: user?.email,
-    };
-
     formData.append('review', JSON.stringify(review));
-    formData.append('movie', JSON.stringify(movieData));
-    formData.append('author', JSON.stringify(author));
 
     return formData;
   };

@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 import { IUser } from './user';
 
 export interface IReviewDetail {
@@ -14,6 +14,7 @@ export interface IMovie {
 }
 
 export interface IReview extends Document {
+  _id?: Types.ObjectId;
   review: IReviewDetail;
   author: IUser;
   movie: IMovie;
