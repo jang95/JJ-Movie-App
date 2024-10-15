@@ -1,8 +1,8 @@
-import mongoose, { Document, Schema, Types } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { IUser } from './user';
 
 export interface IReviewDetail {
-  _id: string;
+  _id: mongoose.Schema.Types.ObjectId;
   content: string;
   rating: number;
   tags?: string[];
@@ -13,8 +13,8 @@ export interface IMovie {
   title: string;
 }
 
-export interface IReview extends Document {
-  _id?: Types.ObjectId;
+export interface IReview {
+  _id?: mongoose.Schema.Types.ObjectId;
   review: IReviewDetail;
   author: IUser;
   movie: IMovie;

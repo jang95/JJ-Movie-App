@@ -87,12 +87,10 @@ export const updateReview = async (req: Request, res: Response) => {
       });
     }
 
-    // review 객체에서 최상위 _id에 접근
-    const objectId = new mongoose.Types.ObjectId(review._id);
+    const objectId = review._id;
 
-    // 리뷰 업데이트
     await Review.findOneAndUpdate(
-      { objectId },
+      { _id: objectId },
       {
         $set: {
           'review.content': review.content,
