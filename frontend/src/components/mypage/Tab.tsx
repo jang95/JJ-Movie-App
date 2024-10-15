@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import Tabs from './Tabs';
 import ProfileCard from './ProfileCard';
-import ReviewList from './ReviewList';
+import ReviewList from '../review/ReviewList';
+import { useAuthStore } from '../../store/authStore';
 
 const Tab = () => {
+  const { user } = useAuthStore();
   const tabTitle = ['나의 정보', '내가 쓴 리뷰'];
   const [activeTab, setActiveTab] = useState('나의 정보');
 
@@ -25,7 +27,11 @@ const Tab = () => {
       </div>
       {/* 컨텐츠 부분 */}
       <div className='w-full'>
-        {activeTab === '나의 정보' ? <ProfileCard /> : <ReviewList />}
+        {activeTab === '나의 정보' ? (
+          <ProfileCard />
+        ) : (
+          <ReviewList type={'user'} id={user?._id} />
+        )}
       </div>
     </>
   );

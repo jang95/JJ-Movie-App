@@ -11,10 +11,10 @@ export interface MovieListResponse {
   total_results: number;
 }
 
-// Basic Data
+// Basic Movie Data
 interface Basic {
   adult: boolean;
-  id: number;
+  id: string;
   popularity: number;
 }
 

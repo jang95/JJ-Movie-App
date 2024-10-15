@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import ReviewItem from './ReviewItem';
 import { sendViewReviewRequest } from '../../api/reviewApi';
-import { useParams } from 'react-router-dom';
 import { IUser } from '../../store/authStore';
+import { sendGetUserReviews } from '../../api/userApi';
 
 export interface IReviewDetail {
-  _id: string; // DB에 저장되어 있는 _id
+  _id: string;
   content: string;
   rating: number;
   tags?: string[];
@@ -20,28 +20,34 @@ export interface IMovie {
 export interface IReview {
   _id: string;
   review: IReviewDetail;
-  author: IUser;
+  author?: IUser;
   movie?: IMovie;
   updatedAt: string;
+  type: string;
 }
 
-const ReviewList = () => {
-  const { id } = useParams();
+interface ReviewListProps {
+  type: string;
+  id: string | undefined;
+}
+
+const ReviewList = ({ type, id }: ReviewListProps) => {
   const { data: reviews } = useQuery({
-    queryKey: [id, 'reviews'],
-    queryFn: () => sendViewReviewRequest(id),
+    queryKey: [id, type],
+    queryFn: () => {
+      if (type === 'movie') {
+        return sendViewReviewRequest(id);
+      } else if (type === 'user') {
+        return sendGetUserReviews(id);
+      }
+    },
   });
 
   return (
-    <div className='py-24 relative'>
-      <div className='w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto'>
-        <div className='w-full'>
-          {/* <h2 className='font-manrope font-bold text-4xl text-black mb-8 text-center'>
-            Our customer reviews
-          </h2> */}
-          <div className='grid grid-cols-1 xl:grid-cols-2 gap-11 pb-11 border-b border-gray-100 max-xl:max-w-2xl max-xl:mx-auto'>
-            {/* 점수 평균 그래프 */}
-            {/* <div className='box flex flex-col gap-y-4 w-full '>
+    <div className='relative w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto'>
+      <div className='grid grid-cols-1 xl:grid-cols-2 gap-11 pb-11 border-b border-gray-100 max-xl:max-w-2xl max-xl:mx-auto'>
+        {/* 점수 평균 그래프 */}
+        {/* <div className='box flex flex-col gap-y-4 w-full '>
               <div className='flex items-center w-full'>
                 <p className='font-medium text-lg text-black mr-0.5'>5</p>
                 <svg
@@ -175,8 +181,8 @@ const ReviewList = () => {
                 </p>
               </div>
             </div> */}
-            {/* 종합 평균 부분 */}
-            {/* <div className='p-8 bg-amber-50 rounded-3xl flex items-center justify-center flex-col'>
+        {/* 종합 평균 부분 */}
+        {/* <div className='p-8 bg-amber-50 rounded-3xl flex items-center justify-center flex-col'>
               <h2 className='font-manrope font-bold text-5xl text-amber-400 mb-6'>
                 4.3
               </h2>
@@ -281,22 +287,19 @@ const ReviewList = () => {
                 46 Ratings
               </p>
             </div> */}
-          </div>
-          {/* {review.map((item: IReview) => {
-            <ReviewItem item={item} />;
-          })} */}
-          {reviews &&
-            reviews.map((item: IReview) => (
-              <ReviewItem
-                key={item._id}
-                _id={item._id}
-                review={item.review}
-                author={item.author}
-                updatedAt={item.updatedAt}
-              />
-            ))}
-        </div>
       </div>
+      {reviews &&
+        reviews.map((review: IReview) => (
+          <ReviewItem
+            key={review._id}
+            _id={review._id}
+            review={review.review}
+            author={review.author}
+            updatedAt={review.updatedAt}
+            movie={review.movie}
+            type={type}
+          />
+        ))}
     </div>
   );
 };
