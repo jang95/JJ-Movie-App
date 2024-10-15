@@ -9,6 +9,7 @@ interface ButtonProps {
   secondary?: boolean;
   danger?: boolean;
   disabled?: boolean;
+  style?: string;
 }
 
 const Button = ({
@@ -19,6 +20,7 @@ const Button = ({
   secondary,
   danger,
   disabled,
+  style,
 }: ButtonProps) => {
   const classes = classNames(
     'px-4 py-2 coursor-pointer border-none rounded-md',
@@ -32,7 +34,7 @@ const Button = ({
   return (
     <button
       type={type}
-      className={classes}
+      className={style ? style : classes}
       onClick={onClick}
       disabled={disabled}
     >
