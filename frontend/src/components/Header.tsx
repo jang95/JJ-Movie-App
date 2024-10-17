@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import webpLogo from '../assets/logo.webp';
 import SearchBar from './SearchBar';
@@ -9,9 +9,14 @@ import MenuBar from './MenuBar';
 import { useState, useEffect, useRef } from 'react';
 
 const Header = () => {
+  const location = useLocation();
   const [isShow, setIsShow] = useState(false);
   const { user } = useAuthStore();
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setIsShow(false);
+  }, [location]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -22,8 +27,6 @@ const Header = () => {
 
     if (isShow) {
       document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
@@ -45,7 +48,11 @@ const Header = () => {
         <SearchBar />
         <div className='flex items-end'>
           {!user ? (
-            <Link to='/login' className='text-2xl font-bold text-gray-800'>
+            <Link
+              to='/login'
+              className='text-2xl font-bold text-gray-800'
+              aria-label='Login'
+            >
               <IoIosLogIn size={30} />
             </Link>
           ) : (
@@ -54,6 +61,7 @@ const Header = () => {
                 className='cursor-pointer mx-auto'
                 size={30}
                 onClick={() => setIsShow(!isShow)}
+                aria-label='Toggle menu'
               />
               {isShow && <MenuBar />}
             </div>
