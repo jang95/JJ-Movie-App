@@ -26,15 +26,18 @@ const ReviewItem = ({
   }, [review, author, user]);
 
   return (
-    <div className='pt-11 pb-8 border-b border-gray-100 max-xl:max-w-2xl max-xl:mx-auto'>
-      <div className='flex sm:items-center flex-col min-[400px]:flex-row justify-between gap-5 mb-4'>
+    <div className='p-4 border-b border-gray-100 max-xl:max-w-2xl max-xl:mx-auto'>
+      <div className='flex sm:items-center flex-col min-[400px]:flex-row justify-between gap-5 mb-2'>
         <div className='flex items-center gap-3'>
           <h6 className='font-semibold text-lg leading-8 text-indigo-600'>
             {type === 'user' ? movie!.title : author!.nickName}
           </h6>
+          <span className='font-semibold text-lg leading-8 text-gray-400'>
+            {formatToISODate(updatedAt)}
+          </span>
         </div>
         {isMyRivew && (
-          <div className='flex gap-2'>
+          <div className='flex gap-2 p-2'>
             <Button
               type={'button'}
               secondary={true}
@@ -53,13 +56,20 @@ const ReviewItem = ({
           </div>
         )}
       </div>
-      <div className='flex justify-between'>
-        <span className='font-normal text-lg leading-8 text-gray-400 max-xl:text-justify'>
+      <div className='flex'>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <div
+            key={star}
+            className={`flex justify-center items-center w-6 h-6 text-2xl ${
+              star <= review.rating ? 'text-yellow-500' : 'text-gray-300'
+            }`}
+          >
+            ★
+          </div>
+        ))}
+        <div className='ml-2 font-normal text-lg text-gray-400'>
           {review.content}
-        </span>
-        <span className='font-semibold text-lg leading-8 text-gray-400'>
-          {formatToISODate(updatedAt)}
-        </span>
+        </div>
       </div>
     </div>
   );
