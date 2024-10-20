@@ -13,7 +13,7 @@ const defaultPersonDetailResponse: PersonDetailResponse = {
   deathday: null,
   gender: 0,
   homepage: null,
-  id: 0,
+  id: '',
   imdb_id: '',
   known_for_department: '',
   name: '',
