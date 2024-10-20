@@ -1,6 +1,5 @@
 import axios from 'axios';
 import api from './api';
-import { useAuthStore } from '../store/authStore';
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
 // 회원가입
@@ -42,10 +41,6 @@ export const sendLoginRequest = async (formData: FormData) => {
 export const sendLogoutRequest = async () => {
   try {
     await api.post(`${BASE_URL}/logout`, {});
-
-    useAuthStore.getState().clearAccessToken();
-    useAuthStore.getState().clearUser();
-    localStorage.removeItem('auth-storage');
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('로그아웃 오류 + error', error);
@@ -54,18 +49,16 @@ export const sendLogoutRequest = async () => {
 };
 
 // 회원탈퇴
-export const withdrawalRequset = async (email: string) => {
+export const withdrawalRequest = async (email: string) => {
   try {
     await axios.delete(`${BASE_URL}/withdrawal`, {
       params: { email },
     });
-    sendLogoutRequest();
-    alert('회원탈퇴 되었습니다.');
-    location.href = 'https://localhost:5173';
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log('withdrawalRequset', error);
+      console.log('회원탈퇴 네트워크 오류 발생', error);
     }
+    throw error;
   }
 };
 

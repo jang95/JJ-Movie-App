@@ -9,7 +9,7 @@ export interface IUser {
 
 interface AuthStateStore {
   user: IUser | null;
-  setUser: (user: IUser | null) => void;
+  setUser: (user: IUser) => void;
   accessToken: string | null;
   setAccessToken: (token: string) => void;
   clearAccessToken: () => void;

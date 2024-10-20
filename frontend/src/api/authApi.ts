@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 import { sendLogoutRequest } from './userApi';
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
+const HOME_URL: string = import.meta.env.VITE_HOME_URL;
 
 // 토큰 인증
 export const verifyAuthToken = async () => {
@@ -110,7 +111,7 @@ export const attemptTokenRefresh = async () => {
     await sendLogoutRequest();
     const moveLoginPage = confirm('로그인 페이지로 이동하시겠습니까?');
     if (moveLoginPage) {
-      location.href = 'https://localhost:5173/login';
+      location.href = `${HOME_URL}/login`;
     }
     throw new Error('Token refresh failed'); // 예외를 다시 던져 호출한 곳에서 처리할 수 있도록 함
   }

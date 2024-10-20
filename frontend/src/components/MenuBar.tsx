@@ -1,6 +1,7 @@
 import { sendLogoutRequest } from '../api/userApi';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import clearUserSession from '../util/clearUserSession';
 
 const MenuBar = () => {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ const MenuBar = () => {
   const userLogout = async () => {
     try {
       await sendLogoutRequest();
+      clearUserSession();
     } catch (error) {
       console.log(error);
     }
