@@ -31,9 +31,10 @@ export const sendLoginRequest = async (formData: FormData) => {
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      error.response?.status === 400 &&
-        alert('이메일 또는 비밀번호가 잘못되었습니다.');
+      throw error;
     }
+    // 일반적인 오류인 경우, 에러를 던짐
+    throw new Error('로그인 오류 발생');
   }
 };
 

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import User, { IUser } from '../schemas/user';
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { Types } from 'mongoose';
 import Review from '../schemas/review';
+import { loginService } from '../services/authService';
 
 // 회원가입
 export const register = async (req: Request, res: Response) => {
@@ -39,53 +39,22 @@ export const register = async (req: Request, res: Response) => {
 // 로그인
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body as IUser;
+    const { email, password } = req.body;
 
-    // 사용자 이메일이 있는지 확인
-    const checkUser = await User.findOne({ email });
+    const result = await loginService(email, password);
 
-    if (!checkUser) {
-      return res
-        .status(400)
-        .json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
+    if (!result) {
+      return res.status(400).json({
+        message: '이메일 또는 비밀번호가 잘못되었습니다.',
+        success: false,
+      });
     }
 
-    const matchPassword = await bcrypt.compare(password, checkUser.password);
-
-    if (!matchPassword) {
-      return res
-        .status(400)
-        .json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
-    }
-
-    // 토큰에 들어갈 내용
-    const user = {
-      email: checkUser.email,
-      nickName: checkUser.nickName,
-      _id: checkUser._id,
-    };
-
-    const accessToken = jwt.sign({ user }, process.env.JWT_SECRET!, {
-      expiresIn: '15m',
-    });
-
-    const refreshToken = jwt.sign({ user }, process.env.JWT_REFRESH_SECRET!, {
-      expiresIn: '7d',
-    });
-
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      sameSite: 'strict',
-      secure: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    // 로그인 성공 응답
     res.status(200).json({
       message: '로그인 성공',
       success: true,
-      accessToken,
-      user,
+      accessToken: result.accessToken,
+      user: result.user,
     });
   } catch (error) {
     console.error('로그인 오류:', error);
