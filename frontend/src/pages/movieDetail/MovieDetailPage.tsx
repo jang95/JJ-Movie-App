@@ -100,7 +100,7 @@ const MovieDetailPage = () => {
   return (
     <div className='container flex flex-col mx-auto sm:px-8'>
       {content}
-      <ReviewList />
+      <ReviewList type={'movie'} id={movie?.id} />
       <CreditsList />
     </div>
   );
