@@ -17,7 +17,7 @@ export const sendCreateReviewRequest = async (formData: FormData) => {
 };
 
 // 리뷰 목록 조회
-export const sendViewReviewRequest = async (reviewId: string | undefined) => {
+export const sendViewReviewRequest = async (reviewId: string) => {
   try {
     const response = await axios.get(`${BASE_URL}/review/view`, {
       params: {
@@ -27,7 +27,9 @@ export const sendViewReviewRequest = async (reviewId: string | undefined) => {
     return response.data.reviews;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      error.response?.status === 400 && alert('리뷰 목록 조회에 실패했습니다.');
+      if (error.response?.status === 400) {
+        alert('리뷰 목록 조회에 실패했습니다.');
+      }
     }
   }
 };

@@ -18,7 +18,8 @@ const MovieDetailPage = () => {
     return <MovieDetailPageSkeleton />;
   }
 
-  let content;
+  let content: JSX.Element | undefined;
+  let reviewList: JSX.Element | undefined;
 
   if (movie) {
     const userScore = Math.floor(movie.vote_average * 10);
@@ -95,12 +96,19 @@ const MovieDetailPage = () => {
         </div>
       </div>
     );
+
+    reviewList = (
+      <>
+        <ReviewList type={'movie'} id={movie.id} />
+      </>
+    );
   }
 
   return (
     <div className='container flex flex-col mx-auto sm:px-8'>
       {content}
-      <ReviewList type={'movie'} id={movie?.id} />
+      {/* <ReviewList type={'movie'} id={movie?.id} /> */}
+      {reviewList}
       <CreditsList />
     </div>
   );

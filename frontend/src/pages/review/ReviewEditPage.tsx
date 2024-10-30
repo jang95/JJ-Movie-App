@@ -12,6 +12,8 @@ import ReviewMovieInfo from '../../components/review/ReviewMovieInfo';
 import Button from '../../ui/Button';
 import Rating from '../../components/Rating';
 
+// TODO
+// Query 사용하여 리팩토링
 const ReviewEditPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -32,7 +34,7 @@ const ReviewEditPage = () => {
 
   useEffect(() => {
     getReview();
-  }, [movie]);
+  }, []);
 
   // 리뷰 데이터 가져오기
   const getReview = async () => {
@@ -92,7 +94,7 @@ const ReviewEditPage = () => {
     e.preventDefault();
 
     const errors = reviewDataValidate();
-    if (Object.keys(errors).length === 0) {
+    if (Object.keys(errors).length > 0) {
       setErrors(errors);
       return;
     }
@@ -101,6 +103,7 @@ const ReviewEditPage = () => {
     try {
       await sendUpdateReviewRequest(data);
       navigate(`/movie/${movie!.id}`);
+      window.location.reload();
     } catch (error) {
       console.log('리뷰 수정 오류', error);
     }

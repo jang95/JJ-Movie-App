@@ -5,6 +5,7 @@ import { useMovieStore } from '../../store/movieStore';
 import Button from '../../ui/Button';
 import ReviewMovieInfo from '../../components/review/ReviewMovieInfo';
 import Rating from '../../components/Rating';
+import { useNavigate } from 'react-router-dom';
 
 export interface ReviewData {
   _id?: string;
@@ -13,6 +14,7 @@ export interface ReviewData {
 }
 
 const ReviewWritePage = () => {
+  const navigate = useNavigate();
   const { movie } = useMovieStore();
   const { user } = useAuthStore();
 
@@ -79,7 +81,7 @@ const ReviewWritePage = () => {
     e.preventDefault();
 
     const errors = reviewDataValidate();
-    if (Object.keys(errors).length === 0) {
+    if (Object.keys(errors).length > 0) {
       setErrors(errors);
       return;
     }
@@ -87,7 +89,7 @@ const ReviewWritePage = () => {
     const data = createFormData(review);
     try {
       await sendCreateReviewRequest(data);
-      window.location.replace(`/movie/${movie!.id}`);
+      navigate(`/movie/${movie!.id}`);
     } catch (error) {
       console.log('리뷰 생성 오류');
     }

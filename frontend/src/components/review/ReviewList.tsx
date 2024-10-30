@@ -16,7 +16,6 @@ export interface IMovie {
   title: string;
 }
 
-// Review 데이터 구조
 export interface IReview {
   _id: string;
   review: IReviewDetail;
@@ -28,20 +27,46 @@ export interface IReview {
 
 interface ReviewListProps {
   type: string;
-  id: string | undefined;
+  id: string;
 }
 
 const ReviewList = ({ type, id }: ReviewListProps) => {
-  const { data: reviews } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: [id, type],
-    queryFn: () => {
+    queryFn: async () => {
       if (type === 'movie') {
-        return sendViewReviewRequest(id);
+        return await sendViewReviewRequest(id);
       } else if (type === 'user') {
-        return sendGetUserReviews(id);
+        return await sendGetUserReviews(id);
       }
     },
   });
+
+  let content: JSX.Element | undefined;
+
+  // TODO
+  // 로딩 컴포넌트 및 error 컴포넌트 제작
+  if (isLoading) {
+    content = <div>리뷰 목록 불러오고 있습니다.</div>;
+  }
+
+  if (error) {
+    content = <div>리뷰 목록 불러오는데 오류 발생</div>;
+  }
+
+  if (data) {
+    content = data.map((review: IReview) => (
+      <ReviewItem
+        key={review._id}
+        _id={review._id}
+        review={review.review}
+        author={review.author}
+        updatedAt={review.updatedAt}
+        movie={review.movie}
+        type={type}
+      />
+    ));
+  }
 
   return (
     <div className='relative w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto'>
@@ -288,18 +313,18 @@ const ReviewList = ({ type, id }: ReviewListProps) => {
               </p>
             </div> */}
       </div>
-      {reviews &&
-        reviews.map((review: IReview) => (
-          <ReviewItem
-            key={review._id}
-            _id={review._id}
-            review={review.review}
-            author={review.author}
-            updatedAt={review.updatedAt}
-            movie={review.movie}
-            type={type}
-          />
-        ))}
+      {/* {isLoading?.map((review: IReview) => (
+        <ReviewItem
+          key={review._id}
+          _id={review._id}
+          review={review.review}
+          author={review.author}
+          updatedAt={review.updatedAt}
+          movie={review.movie}
+          type={type}
+        />
+      ))} */}
+      {content}
     </div>
   );
 };
