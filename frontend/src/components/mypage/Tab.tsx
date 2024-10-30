@@ -30,7 +30,9 @@ const Tab = () => {
         {activeTab === '나의 정보' ? (
           <ProfileCard />
         ) : (
-          <ReviewList type={'user'} id={user?._id} />
+          //TODO
+          // !은 최대한 지양해야함
+          <ReviewList type={'user'} id={user!._id} />
         )}
       </div>
     </>
