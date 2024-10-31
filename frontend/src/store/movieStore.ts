@@ -4,15 +4,49 @@ import { fetchMovieDetail, fetchMovieReleaseDates } from '../api/moviesApi';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
+const defaultMovieDetail: MovieDetail = {
+  backdrop_path: '',
+  belongs_to_collection: {
+    id: 0,
+    name: '',
+    poster_path: '',
+    backdrop_path: '',
+  },
+  budget: 0,
+  genres: [],
+  homepage: '',
+  imdb_id: '',
+  origin_country: [],
+  original_language: '',
+  original_title: '',
+  overview: '',
+  poster_path: '',
+  production_companies: [],
+  production_countries: [],
+  release_date: '',
+  revenue: 0,
+  runtime: 0,
+  spoken_languages: [],
+  status: '',
+  tagline: '',
+  title: '',
+  video: false,
+  vote_average: 0,
+  vote_count: 0,
+  adult: false,
+  id: '',
+  popularity: 0,
+};
+
 interface MovieState {
-  movie: MovieDetail | null;
+  movie: MovieDetail;
   ageRating: string;
   setMovie: (movie: MovieDetail) => void;
   setAgeRating: (ageRating: string) => void;
 }
 
 export const useMovieStore = create<MovieState>((set) => ({
-  movie: null,
+  movie: defaultMovieDetail,
   ageRating: 'NR',
   setMovie: (movie: MovieDetail) => set({ movie }),
   setAgeRating: (ageRating: string) => set({ ageRating }),

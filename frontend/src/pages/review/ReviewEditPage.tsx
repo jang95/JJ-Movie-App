@@ -11,7 +11,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ReviewMovieInfo from '../../components/review/ReviewMovieInfo';
 import Button from '../../ui/Button';
 import Rating from '../../components/Rating';
-
 // TODO
 // Query 사용하여 리팩토링
 const ReviewEditPage = () => {
@@ -33,24 +32,23 @@ const ReviewEditPage = () => {
   }
 
   useEffect(() => {
-    getReview();
-  }, []);
+    const getReviewData = async () => {
+      try {
+        const data: IReview = await sendGetReviewRequset(user?._id, movie!.id);
+        const { review, _id } = data;
+        setReview((prevReviewData) => ({
+          ...prevReviewData,
+          content: review.content,
+          rating: review.rating,
+          _id,
+        }));
+      } catch (error) {
+        console.error('리뷰를 가져오는 중 오류가 발생했습니다.', error);
+      }
+    };
 
-  // 리뷰 데이터 가져오기
-  const getReview = async () => {
-    try {
-      const data: IReview = await sendGetReviewRequset(user?._id, movie!.id);
-      const { review, _id } = data;
-      setReview((prevReviewData) => ({
-        ...prevReviewData,
-        content: review.content,
-        rating: review.rating,
-        _id,
-      }));
-    } catch (error) {
-      console.error('리뷰를 가져오는 중 오류가 발생했습니다.', error);
-    }
-  };
+    getReviewData();
+  }, [movie, user?._id]);
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -102,7 +100,7 @@ const ReviewEditPage = () => {
     const data = createFormData(review);
     try {
       await sendUpdateReviewRequest(data);
-      navigate(`/movie/${movie!.id}`);
+      navigate(`/mypage/${user?.nickName}`);
       window.location.reload();
     } catch (error) {
       console.log('리뷰 수정 오류', error);
