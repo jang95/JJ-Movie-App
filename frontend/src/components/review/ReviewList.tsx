@@ -34,9 +34,9 @@ const ReviewList = ({ type, id }: ReviewListProps) => {
   const { data, isLoading, error } = useQuery({
     queryKey: [id, type],
     queryFn: async () => {
-      if (type === 'movie') {
+      if (type === 'movie' && !!id) {
         return await sendViewReviewRequest(id);
-      } else if (type === 'user') {
+      } else if (type === 'user' && !!id) {
         return await sendGetUserReviews(id);
       }
     },
@@ -313,17 +313,6 @@ const ReviewList = ({ type, id }: ReviewListProps) => {
               </p>
             </div> */}
       </div>
-      {/* {isLoading?.map((review: IReview) => (
-        <ReviewItem
-          key={review._id}
-          _id={review._id}
-          review={review.review}
-          author={review.author}
-          updatedAt={review.updatedAt}
-          movie={review.movie}
-          type={type}
-        />
-      ))} */}
       {content}
     </div>
   );
