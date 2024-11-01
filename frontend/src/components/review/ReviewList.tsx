@@ -38,6 +38,8 @@ const ReviewList = ({ type, id }: ReviewListProps) => {
         return await sendViewReviewRequest(id);
       } else if (type === 'user' && !!id) {
         return await sendGetUserReviews(id);
+      } else {
+        return [];
       }
     },
   });
