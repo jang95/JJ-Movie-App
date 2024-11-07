@@ -1,5 +1,4 @@
 import axios from 'axios';
-import api from './api';
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
 // 회원가입
@@ -33,7 +32,6 @@ export const sendLoginRequest = async (formData: FormData) => {
     if (axios.isAxiosError(error)) {
       throw error;
     }
-    // 일반적인 오류인 경우, 에러를 던짐
     throw new Error('로그인 오류 발생');
   }
 };
@@ -41,7 +39,7 @@ export const sendLoginRequest = async (formData: FormData) => {
 // 로그아웃
 export const sendLogoutRequest = async () => {
   try {
-    await api.post(`${BASE_URL}/logout`, {});
+    await axios.post(`${BASE_URL}/logout`, {}, { withCredentials: true });
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('로그아웃 오류 + error', error);

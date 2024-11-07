@@ -1,7 +1,8 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import PrivateRoute from './routes/PrivateRoute';
 import MypagePage from './pages/mypage/MypagePage';
+import getNewAccessToken from './util/getNewAccessToken';
 
 // Lazy Loading 페이지 컴포넌트
 const HomePage = lazy(() => import('./pages/home/HomePage'));
@@ -78,6 +79,9 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  useEffect(() => {
+    getNewAccessToken();
+  }, []);
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <RouterProvider router={router} />

@@ -1,9 +1,13 @@
 import { useAuthStore } from '../store/authStore';
 
+/**
+ * 사용자 로그아웃 시 전역 상태 관리에 있는
+ * 사용자 정보와 Token 삭제
+ */
 const clearUserSession = () => {
-  useAuthStore.getState().clearAccessToken();
-  useAuthStore.getState().clearUser();
-  localStorage.removeItem('auth-storage');
+  const { clearAccessToken, clearUser } = useAuthStore.getState();
+  clearAccessToken();
+  clearUser();
 };
 
 export default clearUserSession;
